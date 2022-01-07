@@ -1,5 +1,5 @@
 import geatpy as ea  # import geatpy
-from MyProblem import MyProblem  # 导入自定义问题接口
+from problem import MyProblem  # 导入自定义问题接口
 
 
 if __name__ == '__main__':
