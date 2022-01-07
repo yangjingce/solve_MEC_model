@@ -41,6 +41,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         CB = x[:, range(x.shape[1] // 2, x.shape[1])]  # 决策变量，计算位置
         CB = np.array([individual.reshape(self.N_device, self.N_task) for individual in CB])  # 把每个个体一维的计算决策变量还原为矩阵
 
+        # 计算目标函数
         ObjV = []
         for i in range(x.shape[0]):
             multi_user_exp_delay = []  # 所有用户的延迟期望
@@ -54,9 +55,35 @@ class MyProblem(ea.Problem):  # 继承Problem父类
             ObjV.append(max(multi_user_exp_delay))  # 把单个基因的目标函数值保存，目标函数为最大的单用户期望延迟
         pop.ObjV = np.array([ObjV]).T  # 把求得的目标函数值赋值给种群pop的ObjV
 
-
+        # 约束
         # 采用可行性法则处理约束
-        pop.CV = np.hstack()
+        cv = []
+        for i in range(x.shape[0]):
+            # 缓存容量约束
+            A_bound = []
+            for device in range(self.N_device):
+                sum_cache = 0
+                for task in range(self.N_task):
+                    if_cache = False
+                    for user in range(self.N_device):
+                        if CA[i, user, task] == device:
+                            if_cache = True
+                            break
+                    if if_cache:
+                        sum_cache += self.TA[task]
+                A_bound.append(sum_cache - self.A[device])
+
+            B_bound = []
+            for device in range(self.N_device):
+                exp_cal = 0
+                for user in range(self.N_device):
+                    for task in range(self.N_task):
+                        if CB[i][user][task] == device:
+                            exp_cal += self.P[user][task] * self.TB[task]
+                B_bound.append(exp_cal - self.B[device])
+            cv.append(A_bound + B_bound)
+
+        pop.CV = np.array(cv)
 
     def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
         referenceObjV = np.array([[2.5]])
