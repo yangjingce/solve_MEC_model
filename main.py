@@ -6,7 +6,7 @@ if __name__ == '__main__':
     """===============================实例化问题对象==========================="""
     problem = MyProblem()  # 生成问题对象
     """=================================种群设置=============================="""
-    Encoding = 'BG'  # 编码方式
+    Encoding = 'RI'  # 编码方式 实整数编码
     NIND = 40  # 种群规模
     Field = ea.crtfld(Encoding, problem.varTypes, problem.ranges, problem.borders)  # 创建区域描述器
     population = ea.Population(Encoding, Field, NIND)  # 实例化种群对象（此时种群还没被初始化，仅仅是完成种群对象的实例化）
