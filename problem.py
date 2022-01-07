@@ -16,8 +16,11 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
         self.N_task = 10  # 任务的数量
         self.D = np.empty([self.N_device, self.N_device])  # 延迟矩阵，D_ij:从i到j的延迟
+        self.P = np.empty([self.N_device, self.N_task])  # 概率矩阵，P_ur:u用户提出r任务的概率
         self.TA = np.empty([1, self.N_task])  # 任务缓存内容的大小
         self.TB = np.empty([1, self.N_task])  # 任务计算内容的大小
+        self.A = np.empty([1, self.N_device])  # 缓存能力
+        self.B = np.empty([1, self.N_device])  # 计算能力
 
         name = 'MEC_Problem'  # 初始化name（函数名称，可以随意设置）
         M = 1  # 初始化M（目标维数）
@@ -38,7 +41,19 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         CB = x[:, range(x.shape[1] // 2, x.shape[1])]  # 决策变量，计算位置
         CB = np.array([individual.reshape(self.N_device, self.N_task) for individual in CB])  # 把每个个体一维的计算决策变量还原为矩阵
 
-        pop.ObjV = x * np.sin(10 * np.pi * x) + 2.0  # 计算目标函数值，赋值给pop种群对象的ObjV属性
+        ObjV = []
+        for i in range(x.shape[0]):
+            multi_user_exp_delay = []  # 所有用户的延迟期望
+            for user in range(self.N_device):
+                single_user_exp_dalay = 0  # 单个用户的延迟期望
+                for task in range(self.N_task):
+                    single_user_single_task_delay = self.D[CA[i][user][task], CB[i][user][task]] + self.D[
+                        CB[i][user][task], user]
+                    single_user_exp_dalay += single_user_single_task_delay * self.P[user, task]
+                multi_user_exp_delay.append(single_user_exp_dalay)
+            ObjV.append(max(multi_user_exp_delay))  # 把单个基因的目标函数值保存，目标函数为最大的单用户期望延迟
+        pop.ObjV = np.array([ObjV]).T  # 把求得的目标函数值赋值给种群pop的ObjV
+
 
         # 采用可行性法则处理约束
         pop.CV = np.hstack()
