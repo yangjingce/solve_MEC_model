@@ -16,6 +16,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
         self.N_task = 10  # 任务的数量
         self.D = np.empty([self.N_device, self.N_device])  # 延迟矩阵，D_ij:从i到j的延迟
+        #
         self.P = np.empty([self.N_device, self.N_task])  # 概率矩阵，P_ur:u用户提出r任务的概率
         self.TA = np.empty([1, self.N_task])  # 任务缓存内容的大小
         self.TB = np.empty([1, self.N_task])  # 任务计算内容的大小
@@ -85,6 +86,6 @@ class MyProblem(ea.Problem):  # 继承Problem父类
 
         pop.CV = np.array(cv)
 
-    def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
-        referenceObjV = np.array([[2.5]])
-        return referenceObjV
+    # def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
+    #     referenceObjV = np.array([[2.5]])
+    #     return referenceObjV
