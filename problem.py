@@ -4,7 +4,7 @@
 # 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
 import numpy as np
 import geatpy as ea
-
+import Delay
 
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
