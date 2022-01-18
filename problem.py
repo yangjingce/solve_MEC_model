@@ -4,7 +4,7 @@
 # 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
 import numpy as np
 import geatpy as ea
-import Delay
+from Delay import Delay
 
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
@@ -15,8 +15,15 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         self.N_user = 5  # 用户五个
         self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
         self.N_task = 10  # 任务的数量
-        self.D = np.empty([self.N_device, self.N_device])  # 延迟矩阵，D_ij:从i到j的延迟
-        #
+        a = Delay(1, 3, 5)
+        a.set_main_delay(
+            [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
+        a.convert_direct_to_no()
+        a.find_all_short_path()
+        a.set_between_users_un_arrive()
+        self.D = a.graph  # 延迟矩阵，D_ij:从i到j的延迟
+
+
         self.P = np.empty([self.N_device, self.N_task])  # 概率矩阵，P_ur:u用户提出r任务的概率
         self.TA = np.empty([1, self.N_task])  # 任务缓存内容的大小
         self.TB = np.empty([1, self.N_task])  # 任务计算内容的大小
