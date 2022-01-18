@@ -7,7 +7,7 @@ import geatpy as ea
 from Delay import Delay
 from Possible import Possible
 from Task import Task
-
+from Device import Device
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
     def __init__(self):
@@ -26,24 +26,28 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         delay.set_between_users_un_arrive()
         self.D = delay.graph  # 延迟矩阵，D_ij:从i到j的延迟
         # 生成概率矩阵
-        possible = Possible(self.N_cloud, self.N_FAP, self.user, self.N_task)
+        possible = Possible(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
         possible.set_possible_zipf(1)
         self.P = possible.P  # 概率矩阵，P_ur:u用户提出r任务的概率
         # 生成任务
         task = Task(self.N_task)
+        task.set_cache()
+        task.set_comput()
         self.Task_cache = task.Task_cache  # 任务缓存内容的大小
         self.Task_comput = task.Task_comput  # 任务计算内容的大小
         #生成设备
-        self.A = np.empty([1, self.N_device])  # 缓存能力
-        self.B = np.empty([1, self.N_device])  # 计算能力
+        device = Device(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
+        device.set_all()
+        self.A = device.cache  # 缓存能力
+        self.B = device.comput  # 计算能力
 
         name = 'MEC_Problem'  # 初始化name（函数名称，可以随意设置）
         M = 1  # 初始化M（目标维数）
         maxormins = [1]  # 初始化maxormins（目标最小最大化标记列表，1：最小化该目标；-1：最大化该目标）
         Dim = self.N_device * self.N_task * 2  # 初始化Dim（决策变量维数）
         varTypes = [1] * Dim  # 初始化varTypes（决策变量的类型，元素为0表示对应的变量是连续的；1表示是离散的）
-        lb = [0]  # 决策变量下界
-        ub = [self.N_device]  # 决策变量上界
+        lb = [0] * Dim # 决策变量下界
+        ub = [self.N_device] * Dim   # 决策变量上界
         lbin = [1] * Dim  # 决策变量下边界（0表示不包含该变量的下边界，1表示包含）
         ubin = [0] * Dim  # 决策变量上边界（0表示不包含该变量的上边界，1表示包含）
         # 调用父类构造方法完成实例化
@@ -63,8 +67,9 @@ class MyProblem(ea.Problem):  # 继承Problem父类
             for user in range(self.N_device):
                 single_user_exp_dalay = 0  # 单个用户的延迟期望
                 for task in range(self.N_task):
-                    single_user_single_task_delay = self.D[CA[i][user][task], CB[i][user][task]] + self.D[
-                        CB[i][user][task], user]
+                    cache_position = CA[i, user, task]
+                    compute_position = CB[i, user, task]
+                    single_user_single_task_delay = self.D[int(cache_position), int(compute_position)] + self.D[int(compute_position), user]
                     single_user_exp_dalay += single_user_single_task_delay * self.P[user, task]
                 multi_user_exp_delay.append(single_user_exp_dalay)
             ObjV.append(max(multi_user_exp_delay))  # 把单个基因的目标函数值保存，目标函数为最大的单用户期望延迟
@@ -86,7 +91,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
                             break
                     if if_cache:
                         sum_cache += self.Task_cache[task]
-                A_bound.append(sum_cache - self.A[device])
+                A_bound.append(sum_cache - self.A[0, device])
 
             B_bound = []
             for device in range(self.N_device):
@@ -95,7 +100,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
                     for task in range(self.N_task):
                         if CB[i][user][task] == device:
                             exp_cal += self.P[user][task] * self.Task_comput[task]
-                B_bound.append(exp_cal - self.B[device])
+                B_bound.append(exp_cal - self.B[0, device])
             cv.append(A_bound + B_bound)
 
         pop.CV = np.array(cv)

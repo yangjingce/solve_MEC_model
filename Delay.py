@@ -11,7 +11,7 @@ class Delay:
         self.N_user = N_user
         self.N_device = self.N_cloud + self.N_FAP + self.N_user
         self.graph = np.empty([self.N_device, self.N_device])  # 延迟矩阵，D_ij:从i到j的延迟
-        self.graph[:, :] = float('inf')
+        self.graph[:, :] = 100000
 
     def set_main_delay(self, main_delay):
         # 依据main_delay设置主要延迟
@@ -66,7 +66,7 @@ class Delay:
         for point in range(self.N_device):
             cost = [0] * self.N_device
             path = [0] * self.N_device
-            self.dijkstra(point, path, cost, float('inf'))
+            self.dijkstra(point, path, cost, 100000)
             ans.append(cost)
         self.graph = np.asarray(ans)
         return
@@ -76,7 +76,7 @@ class Delay:
         for user in range(-self.N_user, 0):
             for other_user in range(-self.N_user, 0):
                 if user != other_user:
-                    self.graph[user, other_user] = float('inf')
+                    self.graph[user, other_user] = 100000
 
         return
 
