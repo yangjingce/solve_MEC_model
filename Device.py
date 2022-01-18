@@ -2,9 +2,12 @@ import numpy as np
 
 
 class Device:
-    def __init__(self, N_cloud, N_FAP, N_user, N_task, cloud_cache=100000, FAP_cache=110, user_cache=10,
-                 cloud_comput=100000, FAP_comput=110,
-                 user_comput=10):
+    # def __init__(self, N_cloud, N_FAP, N_user, N_task, cloud_cache=100000, FAP_cache=110, user_cache=10,
+    #              cloud_comput=100000, FAP_comput=110,
+    #              user_comput=10):
+    def __init__(self, N_cloud, N_FAP, N_user, N_task, cloud_cache=100000, FAP_cache=1000, user_cache=1000,
+                 cloud_comput=100000, FAP_comput=1000,
+                 user_comput=1000):
         self.N_cloud = N_cloud
         self.N_FAP = N_FAP
         self.N_user = N_user
