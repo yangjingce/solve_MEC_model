@@ -5,6 +5,8 @@
 import numpy as np
 import geatpy as ea
 from Delay import Delay
+from Possible import Possible
+
 
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
@@ -15,6 +17,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         self.N_user = 5  # 用户五个
         self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
         self.N_task = 10  # 任务的数量
+        # 生成延迟矩阵
         a = Delay(1, 3, 5)
         a.set_main_delay(
             [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
@@ -22,11 +25,13 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         a.find_all_short_path()
         a.set_between_users_un_arrive()
         self.D = a.graph  # 延迟矩阵，D_ij:从i到j的延迟
-
-
-        self.P = np.empty([self.N_device, self.N_task])  # 概率矩阵，P_ur:u用户提出r任务的概率
-        self.TA = np.empty([1, self.N_task])  # 任务缓存内容的大小
-        self.TB = np.empty([1, self.N_task])  # 任务计算内容的大小
+        # 生成概率矩阵
+        b = Possible(self.N_cloud, self.N_FAP, self.user, self.N_task)
+        b.set_possible_zipf(1)
+        self.P = b.P  # 概率矩阵，P_ur:u用户提出r任务的概率
+        # 生成任务
+        self.Task_cache = np.empty([1, self.N_task])  # 任务缓存内容的大小
+        self.Task_comput = np.empty([1, self.N_task])  # 任务计算内容的大小
         self.A = np.empty([1, self.N_device])  # 缓存能力
         self.B = np.empty([1, self.N_device])  # 计算能力
 
@@ -78,7 +83,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
                             if_cache = True
                             break
                     if if_cache:
-                        sum_cache += self.TA[task]
+                        sum_cache += self.Task_cache[task]
                 A_bound.append(sum_cache - self.A[device])
 
             B_bound = []
@@ -87,7 +92,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
                 for user in range(self.N_device):
                     for task in range(self.N_task):
                         if CB[i][user][task] == device:
-                            exp_cal += self.P[user][task] * self.TB[task]
+                            exp_cal += self.P[user][task] * self.Task_comput[task]
                 B_bound.append(exp_cal - self.B[device])
             cv.append(A_bound + B_bound)
 

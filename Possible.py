@@ -2,8 +2,11 @@ import numpy as np
 
 
 class Possible:
-    def __init__(self, N_device, N_task):
-        self.N_device = N_device
+    def __init__(self, N_cloud, N_FAP, N_user, N_task):
+        self.N_cloud = N_cloud
+        self.N_FAP = N_FAP
+        self.N_user = N_user
+        self.N_device = self.N_cloud + self.N_FAP + self.N_user
         self.N_task = N_task
         self.P = np.zeros([self.N_device, self.N_task])  # 概率矩阵，P_ur:u用户提出r任务的概率
 
@@ -16,10 +19,10 @@ class Possible:
             temp[i - 1] = pow(i, -alpha) / u
         return temp
 
-    def set_possible_zipf(self,alpha):
+    def set_possible_zipf(self, alpha):
         zipf_possible = self.zipf(alpha)
         index = np.array(range(self.N_task))
-        for device in range(self.N_device):
+        for device in range(self.N_cloud + self.N_FAP, self.N_device):
             temp_index = np.random.permutation(index)
             for i in range(self.N_task):
                 self.P[device, temp_index[i]] = zipf_possible[i]
@@ -28,7 +31,7 @@ class Possible:
 
 
 if __name__ == '__main__':
-    a = Possible(5, 10)
+    a = Possible(1, 3, 5, 10)
     print(a.zipf(1))
     a.set_possible_zipf(1)
     print(a.P)
