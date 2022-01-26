@@ -8,6 +8,9 @@ from Delay import Delay
 from Possible import Possible
 from Task import Task
 from Device import Device
+from Decision import Decision
+
+
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
     def __init__(self):
@@ -35,7 +38,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         task.set_comput()
         self.Task_cache = task.Task_cache  # 任务缓存内容的大小
         self.Task_comput = task.Task_comput  # 任务计算内容的大小
-        #生成设备
+        # 生成设备
         device = Device(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
         device.set_all()
         self.A = device.cache  # 缓存能力
@@ -46,8 +49,8 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         maxormins = [1]  # 初始化maxormins（目标最小最大化标记列表，1：最小化该目标；-1：最大化该目标）
         Dim = self.N_device * self.N_task * 2  # 初始化Dim（决策变量维数）
         varTypes = [1] * Dim  # 初始化varTypes（决策变量的类型，元素为0表示对应的变量是连续的；1表示是离散的）
-        lb = [0] * Dim # 决策变量下界
-        ub = [self.N_device] * Dim   # 决策变量上界
+        lb = [0] * Dim  # 决策变量下界
+        ub = [self.N_device] * Dim  # 决策变量上界
         lbin = [1] * Dim  # 决策变量下边界（0表示不包含该变量的下边界，1表示包含）
         ubin = [0] * Dim  # 决策变量上边界（0表示不包含该变量的上边界，1表示包含）
         # 调用父类构造方法完成实例化
@@ -59,21 +62,29 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         CA = np.array([individual.reshape(self.N_device, self.N_task) for individual in CA])  # 把每个个体一维的缓存决策变量还原为矩阵
         CB = x[:, range(x.shape[1] // 2, x.shape[1])]  # 决策变量，计算位置
         CB = np.array([individual.reshape(self.N_device, self.N_task) for individual in CB])  # 把每个个体一维的计算决策变量还原为矩阵
+        # 设置决策变量类
+        temp = Decision(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
+        temp.set_delay(self.D)
+        temp.set_possible(self.P)
+        #测试最优解
+        # test_solution = [0]*self.N_task + [1]*self.N_task + [2]*self.N_task + [3]*self.N_task + [4]*self.N_task + [5]*self.N_task + [6]*self.N_task + [7]*self.N_task + [8]*self.N_task
+        # test_solution = np.asarray(test_solution)
+        # test_solution = test_solution.reshape(self.N_device, self.N_task)
+        # temp.set_cache_position(test_solution)
+        # temp.set_comput_position(test_solution)
+        # temp.calcul_all_device_exp_delay()
+        # fx_value = temp.get_average_user_delay()
 
         # 计算目标函数
-        ObjV = []
+        ObjV = np.zeros([x.shape[0],1])
         for i in range(x.shape[0]):
-            multi_user_exp_delay = []  # 所有用户的延迟期望
-            for user in range(self.N_device):
-                single_user_exp_dalay = 0  # 单个用户的延迟期望
-                for task in range(self.N_task):
-                    cache_position = CA[i, user, task]
-                    compute_position = CB[i, user, task]
-                    single_user_single_task_delay = self.D[int(cache_position), int(compute_position)] + self.D[int(compute_position), user]
-                    single_user_exp_dalay += single_user_single_task_delay * self.P[user, task]
-                multi_user_exp_delay.append(single_user_exp_dalay)
-            ObjV.append(max(multi_user_exp_delay))  # 把单个基因的目标函数值保存，目标函数为最大的单用户期望延迟
-        pop.ObjV = np.array([ObjV]).T  # 把求得的目标函数值赋值给种群pop的ObjV
+            temp.set_cache_position(CA[i])
+            temp.set_comput_position(CB[i])
+
+            temp.calcul_all_device_exp_delay()
+            fx_value = temp.get_average_user_delay()
+            ObjV[i, 0] = fx_value  # 把单个基因的目标函数值保存
+        pop.ObjV = ObjV  # 把求得的目标函数值赋值给种群pop的ObjV
 
         # 约束
         # 采用可行性法则处理约束
@@ -105,6 +116,6 @@ class MyProblem(ea.Problem):  # 继承Problem父类
 
         pop.CV = np.array(cv)
 
-    # def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
-    #     referenceObjV = np.array([[2.5]])
-    #     return referenceObjV
+    def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
+
+        return 0
