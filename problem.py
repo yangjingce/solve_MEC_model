@@ -15,7 +15,6 @@ from Model import Model
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
     def __init__(self):
-
         self.model = Model()
         name = 'MEC_Problem'  # 初始化name（函数名称，可以随意设置）
         M = 1  # 初始化M（目标维数）
@@ -38,51 +37,31 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         CB = np.array(
             [individual.reshape(self.model.N_device, self.model.N_task) for individual in CB])  # 把每个个体一维的计算决策变量还原为矩阵
         # 设置决策变量类
-        temp = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task, self.model.device_cache,
+        temp = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task,
+                        self.model.device_cache,
                         self.model.device_comput, self.model.task_cache, self.model.task_comput)
         temp.set_delay(self.model.delay)
         temp.set_possible(self.model.possible)
 
-        # 计算目标函数
         ObjV = np.zeros([x.shape[0], 1])
+        cv = np.zeros([x.shape[0], self.model.N_device * 2])
         for i in range(x.shape[0]):
+            # 计算目标函数
             temp.set_cache_position(CA[i])
             temp.set_comput_position(CB[i])
-
             temp.calcul_all_device_exp_delay()
             fx_value = temp.get_average_user_delay()
             ObjV[i, 0] = fx_value  # 把单个基因的目标函数值保存
-        pop.ObjV = ObjV  # 把求得的目标函数值赋值给种群pop的ObjV
-
-        # 约束
-        # 采用可行性法则处理约束
-        cv = []
-        for i in range(x.shape[0]):
+            # 约束
+            # 采用可行性法则处理约束
             # 缓存容量约束
-            A_bound = []
-            for device in range(self.model.N_device):
-                sum_cache = 0
-                for task in range(self.model.N_task):
-                    if_cache = False
-                    for user in range(self.model.N_device):
-                        if CA[i, user, task] == device:
-                            if_cache = True
-                            break
-                    if if_cache:
-                        sum_cache += self.model.task_cache[task]
-                A_bound.append(sum_cache - self.model.device_cache[0, device])
 
-            B_bound = []
-            for device in range(self.model.N_device):
-                exp_cal = 0
-                for user in range(self.model.N_device):
-                    for task in range(self.model.N_task):
-                        if CB[i][user][task] == device:
-                            exp_cal += self.model.possible[user][task] * self.model.task_comput[task]
-                B_bound.append(exp_cal - self.model.device_comput[0, device])
-            cv.append(A_bound + B_bound)
+            temp.calcul_cache_limit()
+            temp.calcul_comput_limit()
+            cv[i, :] = np.hstack((temp.cache_limit, temp.comput_limit))
 
-        pop.CV = np.array(cv)
+        pop.ObjV = ObjV  # 把求得的目标函数值赋值给种群pop的ObjV
+        pop.CV = cv
 
     def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
         # 测试最优解
