@@ -66,6 +66,15 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         temp = Decision(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
         temp.set_delay(self.D)
         temp.set_possible(self.P)
+        #测试最优解
+        # test_solution = [0]*self.N_task + [1]*self.N_task + [2]*self.N_task + [3]*self.N_task + [4]*self.N_task + [5]*self.N_task + [6]*self.N_task + [7]*self.N_task + [8]*self.N_task
+        # test_solution = np.asarray(test_solution)
+        # test_solution = test_solution.reshape(self.N_device, self.N_task)
+        # temp.set_cache_position(test_solution)
+        # temp.set_comput_position(test_solution)
+        # temp.calcul_all_device_exp_delay()
+        # fx_value = temp.get_average_user_delay()
+
         # 计算目标函数
         ObjV = np.zeros([x.shape[0],1])
         for i in range(x.shape[0]):
@@ -107,6 +116,6 @@ class MyProblem(ea.Problem):  # 继承Problem父类
 
         pop.CV = np.array(cv)
 
-    # def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
-    #     referenceObjV = np.array([[2.5]])
-    #     return referenceObjV
+    def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
+
+        return 0
