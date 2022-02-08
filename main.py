@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # NIND = 1000  # 种群规模
     # Field = ea.crtfld(Encoding, problem.varTypes, problem.ranges, problem.borders)  # 创建区域描述器
     # population = ea.Population(Encoding, Field, NIND)  # 实例化种群对象（此时种群还没被初始化，仅仅是完成种群对象的实例化）
-    NIND = 1000  # 总种群规模
+    NIND = 10000  # 总种群规模
     N_population = 4 # 种群数
     NINDs = [NIND // N_population] * N_population  # 种群规模
     population = [None] * N_population # 创建种群列表
