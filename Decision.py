@@ -60,27 +60,20 @@ class Decision:
     def get_average_user_delay(self):
         return sum(self.multi_device_exp_delay[0, -self.N_user:]) / self.N_user
 
-    def calcul_cache_limit(self):
+    def calcul_cache_limit(self):#计算缓存约束
         for device in range(self.N_device):
             sum_cache = 0
             for task in range(self.N_task):
-                if_cache = False
-                for user in range(self.N_device):
-                    if self.cache_position[user, task] == device:
-                        if_cache = True
-                        break
-                if if_cache:
+                if device in self.cache_position[:, task]:
                     sum_cache += self.task_cache[task]
 
             self.cache_limit[0, device] = sum_cache - self.device_cache[0, device]
 
-    def calcul_comput_limit(self):
+    def calcul_comput_limit(self):#计算计算约束
 
         for device in range(self.N_device):
-            exp_cal = 0
-            for user in range(self.N_device):
-                for task in range(self.N_task):
-                    if self.comput_position[user, task] == device:
-                        exp_cal += self.possible[user, task] * self.task_comput[task]
+            offload_user_task = np.where(self.comput_position == device)
+            exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
+
             self.comput_limit[0, device] = exp_cal - self.device_comput[0, device]
 

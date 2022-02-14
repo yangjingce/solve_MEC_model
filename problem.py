@@ -46,12 +46,8 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         population_comput = np.array(
             [individual.reshape(self.model.N_device, self.model.N_task) for individual in
              population_comput])  # 把每个个体一维的计算决策变量还原为矩阵
-        # 设置决策变量类
-        temp = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task,
-                        self.model.device_cache,
-                        self.model.device_comput, self.model.task_cache, self.model.task_comput)
-        temp.set_delay(self.model.delay)
-        temp.set_possible(self.model.possible)
+        # 设置决策变量类列表
+
         decison_list = [None] * pop.sizes
         for i in range(pop.sizes):
             s = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task,
@@ -65,9 +61,9 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         test_data = list(zip(decison_list, population_cache, population_comput))
         result = self.pool.map_async(subAimFunc, test_data)
         result.wait()
-        ttt = np.array(result.get())
-        pop.ObjV = ttt[:, 0].copy().reshape(pop.sizes, 1)
-        pop.CV = ttt[:, 1:].copy()
+        ans_array = np.array(result.get())
+        pop.ObjV = ans_array[:, 0].copy().reshape(pop.sizes, 1)  # 取出目标函数
+        pop.CV = ans_array[:, 1:].copy()  # 取出约束
         #
         # ObjV = np.zeros([x.shape[0], 1])
         # cv = np.zeros([x.shape[0], self.model.N_device * 2])
@@ -113,9 +109,9 @@ def subAimFunc(args):
     decision.set_cache_position(args[1])
     decision.set_comput_position(args[2])
     decision.calcul_all_device_exp_delay()
-    objv = decision.get_average_user_delay()
-    decision.calcul_cache_limit()
-    decision.calcul_comput_limit()
-    test = np.hstack((np.array([[objv]]), decision.cache_limit, decision.comput_limit))[0]
-    return test
-    # return objv,  np.hstack((decision.cache_limit, decision.comput_limit))[0]
+    objv = decision.get_average_user_delay()  # 目标函数值
+    decision.calcul_cache_limit()  # 计算出缓存约束
+    decision.calcul_comput_limit()  # 计算出计算约束
+    objv_cache_comput = np.hstack((np.array([[objv]]), decision.cache_limit, decision.comput_limit))[
+        0]  # 把目标函数值，缓存约束，计算约束放在一个向量里返回
+    return objv_cache_comput
