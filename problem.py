@@ -57,7 +57,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
             s.set_possible(self.model.possible)
             decison_list[i] = s
         # 并行测试代码
-        # test_data = list(zip([temp] * pop.sizes, population_cache, population_comput))
+
         test_data = list(zip(decison_list, population_cache, population_comput))
         result = self.pool.map_async(subAimFunc, test_data)
         result.wait()
@@ -99,7 +99,7 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         test_solution = test_solution.reshape(self.model.N_device, self.model.N_task)
         temp.set_cache_position(test_solution)
         temp.set_comput_position(test_solution)
-        temp.calcul_all_device_exp_delay()
+        temp.calcul_every_device_exp_delay()
         fx_value = temp.get_average_user_delay()
         return fx_value
 
@@ -108,7 +108,7 @@ def subAimFunc(args):
     decision = args[0]
     decision.set_cache_position(args[1])
     decision.set_comput_position(args[2])
-    decision.calcul_all_device_exp_delay()
+    decision.calcul_every_device_exp_delay()
     objv = decision.get_average_user_delay()  # 目标函数值
     decision.calcul_cache_limit()  # 计算出缓存约束
     decision.calcul_comput_limit()  # 计算出计算约束
