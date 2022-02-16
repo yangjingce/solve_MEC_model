@@ -80,34 +80,42 @@ class Decision:
 
     def optimize_device_task(self, device, task):  # 改变单个设备单个任务的卸载决策，以优化延迟
 
-        # 穷举所有缓存位置和计算位置，寻找最优解
-        for cache_device in range(self.N_device):
-            for comput_device in range(self.N_device):
-                # 保存当前决策及延迟
-                cur_cache = int(self.cache_position[device, task])
-                cur_comput = int(self.comput_position[device, task])
-                cur_delay = self.delay[cur_cache, cur_comput] + self.delay[cur_comput, device]
-                # 计算延迟是否更低
-                if self.delay[cache_device, comput_device] + self.delay[comput_device, device] < cur_delay:
+        # 寻找可能的缓存位置
+        possible_cache_device = []
+        cur_cache = int(self.cache_position[device, task])  # 保存原始缓存位置
+        for cache_device in range(self.N_device):  # 穷举所有缓存位置
+            self.cache_position[device, task] = cache_device  # 设置为新的缓存位置
+            # 计算缓存约束
+            sum_cache = 0
+            for t in range(self.N_task):
+                if cache_device in self.cache_position[:, t]:
+                    sum_cache += self.task_cache[t]
+            cache_limit = sum_cache - self.device_cache[0, cache_device]
+
+            if cache_limit <= 0:  # 如果满足缓存约束
+                possible_cache_device.append(cache_device)  # 加入列表
+        self.cache_position[device, task] = cur_cache  # 还原为原始缓存位置
+
+        # 寻找可能的计算位置
+        possible_comput_device = []
+        cur_comput = int(self.comput_position[device, task])  # 保存原始计算位置
+        for comput_device in range(self.N_device):  # 穷举所有计算位置
+            self.comput_position[device, task] = comput_device  # 设置为新的计算位置
+            # 计算计算约束,使用期望计算
+            offload_user_task = np.where(self.comput_position == comput_device)
+            exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
+            comput_limit = exp_cal - self.device_comput[0, comput_device]
+
+            if comput_limit <= 0:  # 如果满足计算约束
+                possible_comput_device.append(comput_device)  # 加入列表
+        self.comput_position[device, task] = cur_comput  # 还原为原始缓存位置
+
+        # 寻找更低延迟的位置
+        for cache_device in possible_cache_device:
+            for comput_device in possible_comput_device:
+                if self.delay[cache_device, comput_device] + self.delay[comput_device, device] < \
+                        self.delay[int(self.cache_position[device, task]), int(self.comput_position[device, task])] + \
+                        self.delay[int(self.comput_position[device, task]), device]:  # 如果时延更小
                     # 设置为新的缓存位置和计算位置
                     self.cache_position[device, task] = cache_device
                     self.comput_position[device, task] = comput_device
-                    # 计算缓存约束
-                    sum_cache = 0
-                    for t in range(self.N_task):
-                        if cache_device in self.cache_position[:, t]:
-                            sum_cache += self.task_cache[t]
-
-                    cache_limit = sum_cache - self.device_cache[0, cache_device]
-                    # 计算计算约束,使用期望计算
-                    offload_user_task = np.where(self.comput_position == comput_device)
-                    exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
-
-                    comput_limit = exp_cal - self.device_comput[0, comput_device]
-                    if cache_limit < 0 and comput_limit < 0:
-                        # 满足约束，保存
-                        pass
-                    else:
-                        # 不满足约束，回退到上一步
-                        self.cache_position[device, task] = cur_cache
-                        self.comput_position[device, task] = cur_comput
