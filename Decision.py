@@ -61,22 +61,25 @@ class Decision:
         # 返回用户的平均延迟
         return sum(self.every_device_exp_delay[0, -self.N_user:]) / self.N_user
 
-    def calcul_cache_limit(self):  # 计算缓存约束
+    def calcul_device_cache_limit(self, device):  # 计算单个设备上的缓存约束
+        sum_cache = 0
+        for task in range(self.N_task):
+            if device in self.cache_position[:, task]:
+                sum_cache += self.task_cache[task]
+        self.cache_limit[0, device] = sum_cache - self.device_cache[0, device]
+
+    def calcul_cache_limit(self):  # 计算所有设备上的缓存约束
         for device in range(self.N_device):
-            sum_cache = 0
-            for task in range(self.N_task):
-                if device in self.cache_position[:, task]:
-                    sum_cache += self.task_cache[task]
+            self.calcul_device_cache_limit(device)
 
-            self.cache_limit[0, device] = sum_cache - self.device_cache[0, device]
+    def calcul_device_comput_limit(self, device):  # 计算单个设备上的计算约束
+        offload_user_task = np.where(self.comput_position == device)
+        exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
+        self.comput_limit[0, device] = exp_cal - self.device_comput[0, device]
 
-    def calcul_comput_limit(self):  # 计算计算约束
-
+    def calcul_comput_limit(self):  # 计算所有设备上的计算约束
         for device in range(self.N_device):
-            offload_user_task = np.where(self.comput_position == device)
-            exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
-
-            self.comput_limit[0, device] = exp_cal - self.device_comput[0, device]
+            self.calcul_device_comput_limit(device)
 
     def optimize_device_task(self, device, task):  # 改变单个设备单个任务的卸载决策，以优化延迟
 

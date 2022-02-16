@@ -109,7 +109,7 @@ def subAimFunc(args):
     decision.set_cache_position(args[1])
     decision.set_comput_position(args[2])
     decision.calcul_every_device_exp_delay()
-    objv = decision.get_average_user_delay()  # 目标函数值
+    objv = decision.get_average_user_delay()  # 目标函数值为平均用户时延
     decision.calcul_cache_limit()  # 计算出缓存约束
     decision.calcul_comput_limit()  # 计算出计算约束
     objv_cache_comput = np.hstack((np.array([[objv]]), decision.cache_limit, decision.comput_limit))[
