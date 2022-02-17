@@ -17,6 +17,7 @@ class Decision:
         self.delay = np.zeros([self.N_device, self.N_device])  # 时延矩阵
         self.possible = np.zeros([self.N_device, self.N_task])  # 概率矩阵
         self.every_device_exp_delay = np.zeros([1, self.N_device])  # 所有设备的延迟期望矩阵
+        self.every_device_every_task_exp_delay = np.zeros([self.N_device, self.N_task])  # 每个设备每个任务延迟期望
         self.cache_limit = np.zeros([1, self.N_device])  # 缓存约束
         self.comput_limit = np.zeros([1, self.N_device])  # 计算约束
         return
@@ -37,21 +38,25 @@ class Decision:
     def set_possible(self, possible):
         self.possible = possible
 
-    def calcul_single_device_exp_delay(self, user):
+    def calcul_single_device_single_task_exp_delay(self, device, task):
+        # 计算单个设备单个任务的延迟的期望
+        cache_position = int(self.cache_position[device, task])
+        comput_position = int(self.comput_position[device, task])
+        delay = self.delay[cache_position, comput_position] + self.delay[comput_position, device]
+        self.every_device_every_task_exp_delay[device, task] = delay * self.possible[device, task]
+        return
+
+    def calcul_single_device_exp_delay(self, device):
         # 计算单个设备的延迟的期望
-        single_device_exp_dalay = 0  # 单个用户的延迟期望
         for task in range(self.N_task):
-            single_device_cache_position = int(self.cache_position[user, task])
-            single_device_comput_position = int(self.comput_position[user, task])
-            single_device_single_task_dalay = self.delay[single_device_cache_position, single_device_comput_position] + \
-                                              self.delay[single_device_comput_position, user]
-            single_device_exp_dalay += single_device_single_task_dalay * self.possible[user, task]
-        return single_device_exp_dalay
+            self.calcul_single_device_single_task_exp_delay(device, task)
+        self.every_device_exp_delay[0, device] = sum(self.every_device_every_task_exp_delay[device, :])
+        return
 
     def calcul_every_device_exp_delay(self):
         # 计算所有设备的延迟的期望
-        for user in range(self.N_device):
-            self.every_device_exp_delay[0, user] = self.calcul_single_device_exp_delay(user)
+        for device in range(self.N_device):
+            self.calcul_single_device_exp_delay(device)
 
     def get_max_user_delay(self):
         # 计算所有用户的最大延迟

@@ -49,9 +49,6 @@ if __name__ == '__main__':
                 min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
                 min_arrive_loop = loop
 
-
-
-
         # 按优先级顺序进行处理
         for task in range(model.N_task):
             for i, device in enumerate(priority_device):
@@ -75,4 +72,3 @@ if __name__ == '__main__':
     print(min_max_delay)
     print(min_ans)
     print(min_arrive_loop)
-

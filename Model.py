@@ -24,7 +24,7 @@ class Model:
         self.delay = delay.graph  # 延迟矩阵，D_ij:从i到j的延迟
         # 生成概率矩阵
         possible = Possible(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
-        #possible.set_possible_zipf(1)  # 以alpha为参数，生成随机的概率矩阵
+        # possible.set_possible_zipf(1)  # 以alpha为参数，生成随机的概率矩阵
         possible.set_certain_zipf()  # 生成确定的zipf分布的概率矩阵
         self.possible = possible.P  # 概率矩阵，P_ur:u用户提出r任务的概率
         # 生成任务
