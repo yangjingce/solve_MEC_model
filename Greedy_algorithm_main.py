@@ -38,6 +38,8 @@ if __name__ == '__main__':
         decision.calcul_cache_limit()  # 计算出缓存约束
         decision.calcul_comput_limit()  # 计算出计算约束
         priority_device = np.argsort(decision.every_device_exp_delay)[0][::-1]  # 计算优先级，延迟高的优先级高，算法中先优化
+        # 计算每个设备选择任务的优先级
+        priority_device_task = np.array([np.argsort(d)[::-1] for d in decision.every_device_every_task_exp_delay])
         # 按照优先级矩阵，每个device依次决策
         # 判断当前是否优先级最高的设备为上次优先级最高的设备
         if priority_device[0] == first_device:  # 是，增加他可以优化的task的数量
@@ -49,7 +51,7 @@ if __name__ == '__main__':
         # 对于优先级最高的设备特殊处理
 
         for task in range(N_first_device_can_optimize_task):
-            decision.optimize_device_task(priority_device[0], task)
+            decision.optimize_device_task(priority_device[0], priority_device_task[priority_device[0], task])
             decision.calcul_every_device_exp_delay()
             if decision.get_max_user_delay() < min_max_delay:  # 记录最优解
                 decision.calcul_every_device_exp_delay()
@@ -64,7 +66,7 @@ if __name__ == '__main__':
                 if i == 0 and task < N_first_device_can_optimize_task:
                     pass
                 else:
-                    decision.optimize_device_task(priority_device[i], task)
+                    decision.optimize_device_task(priority_device[i], priority_device_task[priority_device[i], task])
                     decision.calcul_every_device_exp_delay()
                     if decision.get_max_user_delay() < min_max_delay:  # 记录最优解
                         min_max_delay = decision.get_max_user_delay()
