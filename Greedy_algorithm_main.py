@@ -23,10 +23,11 @@ if __name__ == '__main__':
     decision.set_cache_position(ans[0])
     decision.set_comput_position(ans[1])
     # 迭代次数
-    N_loop = 5
+    N_loop = 15
     # 算法开始
     priority_device = np.arange(0, model.N_device, 1)  # 优先级矩阵，排在前面的device先做出卸载决策
     N_first_device_can_optimize_task = 1  # 优先级最高的device可以优化的task的数量
+    first_device = None  # 上次优先级最高的device
     min_max_delay = float('inf')  # 最小的最大延迟
     min_ans = None  # 达到最小最大延迟时的卸载决策
     min_arrive_loop = None  # 达到最小最大延迟时的循环次数
@@ -38,6 +39,13 @@ if __name__ == '__main__':
         decision.calcul_comput_limit()  # 计算出计算约束
         priority_device = np.argsort(decision.every_device_exp_delay)[0][::-1]  # 计算优先级，延迟高的优先级高，算法中先优化
         # 按照优先级矩阵，每个device依次决策
+        # 判断当前是否优先级最高的设备为上次优先级最高的设备
+        if priority_device[0] == first_device:  # 是，增加他可以优化的task的数量
+            N_first_device_can_optimize_task = min(N_first_device_can_optimize_task + 1, model.N_device)
+        else:  # 否，task数量置1
+            first_device = priority_device[0]
+            N_first_device_can_optimize_task = 1
+
         # 对于优先级最高的设备特殊处理
 
         for task in range(N_first_device_can_optimize_task):

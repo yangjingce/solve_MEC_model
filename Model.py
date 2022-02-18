@@ -15,7 +15,8 @@ class Model:
         self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
         self.N_task = 10  # 任务的数量
         # 生成延迟矩阵
-        delay = Delay(1, 3, 5)
+        delay = Delay(self.N_cloud, self.N_FAP, self.N_user)
+        # 设置关键节点之间的延迟
         delay.set_main_delay(
             [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
         delay.convert_direct_to_no()
