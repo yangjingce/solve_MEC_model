@@ -31,7 +31,7 @@ if __name__=='__main__':
         # 按step步骤优化解
         for step in order:
             step_user = step // model.N_task + model.N_cloud + model.N_FAP
-            step_task = step % model.N_user
+            step_task = step % model.N_task
             decision.optimize_device_task(step_user, step_task)
         # 计算延迟
         decision.calcul_every_device_exp_delay()
