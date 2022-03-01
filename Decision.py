@@ -79,8 +79,8 @@ class Decision:
 
     def calcul_device_comput_limit(self, device):  # 计算单个设备上的计算约束
         offload_user_task = np.where(self.comput_position == device)
-        exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
-        self.comput_limit[0, device] = exp_cal - self.device_comput[0, device]
+        sum_cal = sum(self.task_comput[offload_user_task[1]])  # 考虑最大的计算负载小于设备的计算能力
+        self.comput_limit[0, device] = sum_cal - self.device_comput[0, device]
 
     def calcul_comput_limit(self):  # 计算所有设备上的计算约束
         for device in range(self.N_device):
@@ -109,9 +109,9 @@ class Decision:
         cur_comput = int(self.comput_position[device, task])  # 保存原始计算位置
         for comput_device in range(self.N_device):  # 穷举所有计算位置
             self.comput_position[device, task] = comput_device  # 设置为新的计算位置
-            # 计算计算约束,使用期望计算
+            # 计算计算约束,使用最大值计算
             offload_user_task = np.where(self.comput_position == comput_device)
-            exp_cal = sum(self.possible[offload_user_task] * self.task_comput[offload_user_task[1]])
+            exp_cal = sum(self.task_comput[offload_user_task[1]])
             comput_limit = exp_cal - self.device_comput[0, comput_device]
 
             if comput_limit <= 0:  # 如果满足计算约束

@@ -1,7 +1,8 @@
 import geatpy as ea  # import geatpy
 import numpy as np
-
+from Model import Model
 from order_problem import MyProblem  # 导入自定义问题接口
+from Decision import Decision
 
 if __name__ == '__main__':
     """===============================实例化问题对象==========================="""
@@ -12,7 +13,7 @@ if __name__ == '__main__':
     # NIND = 1000  # 种群规模
     # Field = ea.crtfld(Encoding, problem.varTypes, problem.ranges, problem.borders)  # 创建区域描述器
     # population = ea.Population(Encoding, Field, NIND)  # 实例化种群对象（此时种群还没被初始化，仅仅是完成种群对象的实例化）
-    NIND = 1000 # 总种群规模
+    NIND = 100 # 总种群规模
     N_population = 4 # 种群数
     NINDs = [NIND // N_population] * N_population  # 种群规模
     population = [None] * N_population # 创建种群列表
@@ -49,3 +50,31 @@ if __name__ == '__main__':
             print(BestIndi.Phen[0, i])
     else:
         print('没找到可行解。')
+
+    def convert_result(order_ans):
+
+        model = Model()
+        # 初始化决策对象
+        decision = Decision(model.N_cloud, model.N_FAP, model.N_user, model.N_task, model.device_cache,
+                            model.device_comput,
+                            model.task_cache, model.task_comput)
+        decision.set_delay(model.delay)
+        decision.set_possible(model.possible)
+        # 初始解，所有缓存和计算在云端位置上
+        decision.cache_position = np.zeros([model.N_device, model.N_task])
+        decision.comput_position = np.zeros([model.N_device, model.N_task])
+        # 按step步骤优化解
+        for step in order_ans:
+            step_user = step // model.N_task + model.N_cloud + model.N_FAP
+            step_task = step % model.N_task
+            decision.optimize_device_task(step_user, step_task)
+        # 计算延迟
+        decision.calcul_every_device_exp_delay()
+        return decision
+    result = convert_result(BestIndi.Phen[0])
+    print('------------------------------')
+    print(result.get_max_user_delay())
+    print(result.cache_position)
+    print(result.comput_position)
+
+
