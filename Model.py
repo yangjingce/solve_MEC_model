@@ -4,6 +4,7 @@ from Possible import Possible
 from Task import Task
 from Device import Device
 from Decision import Decision
+from BandWidth import Bandwidth
 
 
 class Model:
@@ -14,15 +15,24 @@ class Model:
         self.N_user = 5  # 用户五个
         self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
         self.N_task = 10  # 任务的数量
-        # 生成延迟矩阵
-        delay = Delay(self.N_cloud, self.N_FAP, self.N_user)
-        # 设置关键节点之间的延迟
-        delay.set_main_delay(
-            [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
-        delay.convert_direct_to_no()
-        delay.find_all_short_path()
-        delay.set_between_users_un_arrive()
-        self.delay = delay.graph  # 延迟矩阵，D_ij:从i到j的延迟
+        # # 生成延迟矩阵
+        # delay = Delay(self.N_cloud, self.N_FAP, self.N_user)
+        # # 设置关键节点之间的延迟
+        # delay.set_main_delay(
+        #     [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
+        # delay.convert_direct_to_no()
+        # delay.find_all_short_path()
+        # delay.set_between_users_un_arrive()
+        # self.delay = delay.graph  # 延迟矩阵，D_ij:从i到j的延迟
+        # 生成带宽矩阵类
+        bandwidth = Bandwidth(self.N_cloud, self.N_FAP, self.N_user)
+        # 设置关键节点之间的带宽
+        bandwidth.set_main_bandwidth([(0, 1, 10), (0, 2, 10), (0, 3, 10), (1, 4, 100),
+                                      (1, 5, 100), (2, 6, 100), (2, 7, 100), (3, 8, 100)])
+        bandwidth.convert_direct_to_no()
+        bandwidth.find_all_bandwidth_path()
+        bandwidth.set_device_self_bandwidth_None()
+        self.bandwidth = bandwidth.graph  # 带宽矩阵，B_ij:从i到j的带宽，B_ii的带宽为None
         # 生成概率矩阵
         possible = Possible(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
         # possible.set_possible_zipf(1)  # 以alpha为参数，生成随机的概率矩阵
