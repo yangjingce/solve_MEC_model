@@ -60,7 +60,8 @@ def subAimFunc(args):
     # 初始化决策对象
     decision = Decision(model.N_cloud, model.N_FAP, model.N_user, model.N_task, model.device_cache, model.device_comput,
                         model.task_cache, model.task_comput)
-    decision.set_delay(model.delay)
+    # decision.set_delay(model.delay)
+    decision.set_bandwidth(model.bandwidth)
     decision.set_possible(model.possible)
     # 初始解，所有缓存和计算在云端位置上
     decision.cache_position = np.zeros([model.N_device, model.N_task])

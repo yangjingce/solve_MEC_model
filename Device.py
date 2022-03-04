@@ -19,37 +19,37 @@ class Device:
         self.user_comput = user_comput
         self.N_device = self.N_cloud + self.N_FAP + self.N_user
         self.N_task = N_task
-        self.cache = np.zeros([1, self.N_device])  # 任务缓存内容的大小
-        self.comput = np.zeros([1, self.N_device])  # 任务计算内容的大小
+        self.device_cache = np.zeros([1, self.N_device])  # 任务缓存内容的大小
+        self.device_comput = np.zeros([1, self.N_device])  # 任务计算内容的大小
 
     def set_cloud_cache(self):
         for device in range(self.N_cloud):
-            self.cache[0, device] = self.cloud_cache
+            self.device_cache[0, device] = self.cloud_cache
         return
 
     def set_FAP_cache(self):
         for device in range(self.N_cloud, self.N_cloud + self.N_FAP):
-            self.cache[0, device] = self.FAP_cache
+            self.device_cache[0, device] = self.FAP_cache
         return
 
     def set_user_cache(self):
         for device in range(self.N_cloud + self.N_FAP, self.N_device):
-            self.cache[0, device] = self.user_cache
+            self.device_cache[0, device] = self.user_cache
         return
 
     def set_cloud_comput(self):
         for device in range(self.N_cloud):
-            self.comput[0, device] = self.cloud_comput
+            self.device_comput[0, device] = self.cloud_comput
         return
 
     def set_FAP_comput(self):
         for device in range(self.N_cloud, self.N_cloud + self.N_FAP):
-            self.comput[0, device] = self.FAP_comput
+            self.device_comput[0, device] = self.FAP_comput
         return
 
     def set_user_comput(self):
         for device in range(self.N_cloud + self.N_FAP, self.N_device):
-            self.comput[0, device] = self.user_comput
+            self.device_comput[0, device] = self.user_comput
         return
 
     def set_all(self):
@@ -64,5 +64,5 @@ class Device:
 if __name__ == '__main__':
     a = Device(1, 3, 5, 10)
     a.set_all()
-    print(a.cache)
-    print(a.comput)
+    print(a.device_cache)
+    print(a.device_comput)

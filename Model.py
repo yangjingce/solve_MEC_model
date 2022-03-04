@@ -42,10 +42,10 @@ class Model:
         task = Task(self.N_task)
         task.set_cache()
         task.set_comput()
-        self.task_cache = task.Task_cache  # 任务缓存内容的大小
-        self.task_comput = task.Task_comput  # 任务计算内容的大小
+        self.task_cache = task.task_cache  # 任务缓存内容的大小
+        self.task_comput = task.task_comput  # 任务计算内容的大小
         # 生成设备
         device = Device(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
         device.set_all()
-        self.device_cache = device.cache  # 设备的缓存能力
-        self.device_comput = device.comput  # 设备的计算能力
+        self.device_cache = device.device_cache  # 设备的缓存能力
+        self.device_comput = device.device_comput  # 设备的计算能力
