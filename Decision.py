@@ -217,27 +217,30 @@ class Decision:
         self.comput_position[device, task] = cur_comput  # 还原为原始缓存位置
         return possible_comput_device
 
-    def optimize_device_task_time(self, device, task):
+    def optimize_device_task_time(self, device, task, function):
         """改变单个设备单个任务的卸载决策，以优化排队论下的延迟"""
         possible_cache_device = self.find_possible_cache_device(device, task)
         possible_comput_device = self.find_possible_comput_device(device, task)
         # 记录最好位置
         best_cache_position = self.cache_position[device, task]
         best_comput_position = self.comput_position[device, task]
-        best_time = self.calcul_single_device_single_task_time(device, task)
+        best_value = function( device, task)
         # 寻找更低延迟的位置
         for cache_device in possible_cache_device:
             self.cache_position[device, task] = cache_device
             for comput_device in possible_comput_device:
                 self.comput_position[device, task] = comput_device
-                if self.calcul_single_device_single_task_time(device, task) < best_time:
+                if function( device, task) < best_value:
                     # 记录最好位置
                     best_cache_position = self.cache_position[device, task]
                     best_comput_position = self.comput_position[device, task]
-                    best_time = self.calcul_single_device_single_task_time(device, task)
+                    best_value = function( device, task)
         # 使用最好位置
         self.cache_position[device, task] = best_cache_position
         self.comput_position[device, task] = best_comput_position
+
+
+
 
     def set_single_device_single_task_time(self, device, task):
         """计算单个设备单个任务的时延，放入矩阵，在排队论下"""
@@ -256,6 +259,10 @@ class Decision:
             self.set_single_device_single_task_time(device, task)
 
         self.every_device_time[0, device] = sum(self.every_device_every_task_time[device, :])
+
+    def get_single_device_time(self, device, task):
+        self.set_single_device_time(device)
+        return self.every_device_time[0, device]
 
     def set_device_time(self):
         """计算所有设备的期望时延，排队论下"""

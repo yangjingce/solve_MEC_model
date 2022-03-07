@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
         for task in range(N_first_device_can_optimize_task):
             # decision.optimize_device_task_delay(priority_device[0], priority_device_task[priority_device[0], task])
-            decision.optimize_device_task_time(priority_device[0], priority_device_task[priority_device[0], task])
+            decision.optimize_device_task_time(priority_device[0], priority_device_task[priority_device[0], task], decision.get_single_device_time)
 
             # decision.calcul_every_device_exp_delay()
             # if decision.get_max_user_delay() < min_max_delay:  # 记录最优解
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                 else:
                     # decision.optimize_device_task_delay(priority_device[i], priority_device_task[priority_device[i], task])
                     decision.optimize_device_task_time(priority_device[i],
-                                                        priority_device_task[priority_device[i], task])
+                                                        priority_device_task[priority_device[i], task], decision.get_single_device_time)
 
                     # decision.calcul_every_device_exp_delay()
                     # if decision.get_max_user_delay() < min_max_delay:  # 记录最优解
