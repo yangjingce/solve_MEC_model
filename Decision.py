@@ -93,7 +93,7 @@ class Decision:
         for device in range(self.N_device):
             self.calcul_device_comput_limit(device)
 
-    def optimize_device_task(self, device, task):
+    def optimize_device_task_delay(self, device, task):
         """改变单个设备单个任务的卸载决策，以优化延迟"""
         possible_cache_device = self.find_possible_cache_device(device, task)
         possible_comput_device = self.find_possible_comput_device(device, task)
@@ -209,5 +209,31 @@ class Decision:
                 possible_comput_device.append(comput_device)  # 加入列表
         self.comput_position[device, task] = cur_comput  # 还原为原始缓存位置
         return possible_comput_device
+
+    def optimize_device_task_time(self, device, task):
+        """改变单个设备单个任务的卸载决策，以优化排队论下的延迟"""
+        possible_cache_device = self.find_possible_cache_device(device, task)
+        possible_comput_device = self.find_possible_comput_device(device, task)
+        # 记录最好位置
+        best_cache_position = self.cache_position[device, task]
+        best_comput_position = self.comput_position[device, task]
+        best_time = self.calcul_single_device_single_task_time(device, task)
+        # 寻找更低延迟的位置
+        for cache_device in possible_cache_device:
+            self.cache_position[device, task] = cache_device
+            for comput_device in possible_comput_device:
+                self.comput_position[device, task] = comput_device
+                if self.calcul_single_device_single_task_time(device, task) < best_time:
+                    # 记录最好位置
+                    best_cache_position = self.cache_position[device, task]
+                    best_comput_position = self.comput_position[device, task]
+                    best_time = self.calcul_single_device_single_task_time(device, task)
+        # 使用最好位置
+        self.cache_position[device, task] = best_cache_position
+        self.comput_position[device, task] = best_comput_position
+
+
+
+
 
 
