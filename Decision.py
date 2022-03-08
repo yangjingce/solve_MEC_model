@@ -154,7 +154,10 @@ class Decision:
 
     def calcul_single_device_single_task_all_time(self, device, task):
         """任务在device处计算总共的时间"""
-        return self.calcul_single_device_wait_time(device) + \
+        if self.task_comput[task] == 0:  # 如果不需要计算,不用等待，直接返回0
+            return 0
+        else:  # 否则，包含等待和处理两部分时间
+            return self.calcul_single_device_wait_time(device) + \
                self.calcul_single_device_single_task_process_time(device, task)
 
     def calcul_task_transmit_time(self, source_device, target_device, task):
@@ -261,6 +264,7 @@ class Decision:
         self.every_device_time[0, device] = sum(self.every_device_every_task_time[device, :])
 
     def get_single_device_time(self, device, task):
+        """计算单个设备的延迟期望并返回，专为optimize函数设计，作为函数指针传入"""
         self.set_single_device_time(device)
         return self.every_device_time[0, device]
 

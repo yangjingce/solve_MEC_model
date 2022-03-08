@@ -77,5 +77,6 @@ if __name__ == '__main__':
     print(result.get_max_device_time())
     print(result.cache_position)
     print(result.comput_position)
+    print(result.every_device_time)
 
 
