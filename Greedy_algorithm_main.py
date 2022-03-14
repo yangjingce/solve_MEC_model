@@ -52,6 +52,10 @@ if __name__ == '__main__':
             first_device = priority_device[0]
             N_first_device_can_optimize_task = 1
 
+        # 在进行本轮博弈前，把解重新设为初始解
+        decision.set_cache_position(np.zeros([model.N_device, model.N_task]))
+        decision.set_comput_position(np.zeros([model.N_device, model.N_task]))
+
         # 对于优先级最高的设备特殊处理
 
         for task in range(N_first_device_can_optimize_task):

@@ -227,17 +227,17 @@ class Decision:
         # 记录最好位置
         best_cache_position = self.cache_position[device, task]
         best_comput_position = self.comput_position[device, task]
-        best_value = function( device, task)
+        best_value = function(device, task)
         # 寻找更低延迟的位置
         for cache_device in possible_cache_device:
             self.cache_position[device, task] = cache_device
             for comput_device in possible_comput_device:
                 self.comput_position[device, task] = comput_device
-                if function( device, task) < best_value:
+                if function(device, task) < best_value:
                     # 记录最好位置
                     best_cache_position = self.cache_position[device, task]
                     best_comput_position = self.comput_position[device, task]
-                    best_value = function( device, task)
+                    best_value = function(device, task)
         # 使用最好位置
         self.cache_position[device, task] = best_cache_position
         self.comput_position[device, task] = best_comput_position
