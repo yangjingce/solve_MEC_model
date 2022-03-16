@@ -17,12 +17,14 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
-    def __init__(self):
-        self.model = Model()
+    def __init__(self, model=None):
+        if not model:
+            model = Model()
+        self.model = model
         name = 'MEC_order_Problem'  # 初始化name（函数名称，可以随意设置）
         M = 1  # 初始化M（目标维数）
         maxormins = [1]  # 初始化maxormins（目标最小最大化标记列表，1：最小化该目标；-1：最大化该目标）
-        Dim = self.model.N_user * self.model.N_task   # 初始化Dim（决策变量维数）
+        Dim = self.model.N_user * self.model.N_task  # 初始化Dim（决策变量维数）
         varTypes = [1] * Dim  # 初始化varTypes（决策变量的类型，元素为0表示对应的变量是连续的；1表示是离散的）
         lb = [0] * Dim  # 决策变量下界
         ub = [Dim - 1] * Dim  # 决策变量上界
@@ -39,7 +41,6 @@ class MyProblem(ea.Problem):  # 继承Problem父类
     def aimFunc(self, pop):  # 目标函数
         x = pop.Phen  # 得到决策变量矩阵
 
-
         # 并行测试代码
 
         test_data = list(zip([self.model] * pop.sizes, x))
@@ -48,7 +49,6 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         ans_array = np.array(result.get())
         pop.ObjV = ans_array.copy().reshape(pop.sizes, 1)  # 取出目标函数
         pop.CV = np.zeros([pop.sizes, 1])  # 取出约束
-
 
     # def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
     #     return 0
@@ -70,7 +70,10 @@ def subAimFunc(args):
     for step in order:
         step_user = step // model.N_task + model.N_cloud + model.N_FAP
         step_task = step % model.N_task
-        decision.optimize_device_task_delay(step_user, step_task)
+        # decision.optimize_device_task_delay(step_user, step_task)
+        decision.optimize_device_task_time(step_user, step_task, decision.get_single_device_time)
     # 计算延迟
-    decision.calcul_every_device_exp_delay()
-    return decision.get_max_user_delay()
+    # decision.calcul_every_device_exp_delay()
+    decision.set_device_time()
+    # return decision.get_max_user_delay()
+    return decision.get_max_device_time()
