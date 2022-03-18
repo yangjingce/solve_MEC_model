@@ -32,26 +32,40 @@ class MyProblem(ea.Problem):  # 继承Problem父类
         ubin = [1] * Dim  # 决策变量上边界（0表示不包含该变量的上边界，1表示包含）
         # 调用父类构造方法完成实例化
         ea.Problem.__init__(self, name, M, maxormins, Dim, varTypes, lb, ub, lbin, ubin)
-
         # 设置用多进程,进程池
 
-        num_cores = int(mp.cpu_count())  # 获得计算机的核心数
-        self.pool = ProcessPool(num_cores)  # 设置池的大小
+        # num_cores = int(mp.cpu_count())  # 获得计算机的核心数
+        # self.pool = ProcessPool(num_cores)  # 设置池的大小
+
 
     def aimFunc(self, pop):  # 目标函数
         x = pop.Phen  # 得到决策变量矩阵
-
+        # 设置用多进程,进程池
+        num_cores = int(mp.cpu_count())  # 获得计算机的核心数
+        pool = ProcessPool(num_cores)  # 设置池的大小
         # 并行测试代码
 
         test_data = list(zip([self.model] * pop.sizes, x))
-        result = self.pool.map_async(subAimFunc, test_data)
+        result = pool.map_async(subAimFunc, test_data)
         result.wait()
+
         ans_array = np.array(result.get())
         pop.ObjV = ans_array.copy().reshape(pop.sizes, 1)  # 取出目标函数
         pop.CV = np.zeros([pop.sizes, 1])  # 取出约束
+        pool.close()
+        pool.join()
+        # 非并行代码
+        # test_data = list(zip([self.model] * pop.sizes, x))
+        # pop.ObjV = np.zeros([pop.sizes, 1])
+        # pop.CV = np.zeros([pop.sizes, 1])  # 取出约束
+        # for i, t in enumerate(test_data):
+        #     pop.ObjV[i, 0] = subAimFunc(t)
 
     # def calReferObjV(self):  # 设定目标数参考值（本问题目标函数参考值设定为理论最优值）
     #     return 0
+    # def __del__(self):
+    #     self.pool.close()
+    #     self.pool.join()
 
 
 def subAimFunc(args):

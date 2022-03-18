@@ -5,8 +5,8 @@ from order_problem import MyProblem  # 导入自定义问题接口
 from Decision import Decision
 
 
-def convert_result(order_ans):
-    model = Model()
+def convert_result(order_ans, model):
+    #model = Model()
     # 初始化决策对象
     decision = Decision(model.N_cloud, model.N_FAP, model.N_user, model.N_task, model.device_cache,
                         model.device_comput, model.task_cache, model.task_comput)
@@ -61,7 +61,7 @@ class OrderAlgorithm:
         myAlgorithm.trappedValue = 1e-6  # “进化停滞”判断阈值
         myAlgorithm.maxTrappedCount = 10000  # 进化停滞计数器最大上限值，如果连续maxTrappedCount代被判定进化陷入停滞，则终止进化
         myAlgorithm.logTras = 1  # 设置每隔多少代记录日志，若设置成0则表示不记录日志
-        myAlgorithm.verbose = False  # 设置是否打印输出日志信息
+        myAlgorithm.verbose = True  # 设置是否打印输出日志信息
         myAlgorithm.drawing = 0  # 设置绘图方式（0：不绘图；1：绘制结果图；2：绘制目标空间过程动画；3：绘制决策空间过程动画）
         self.myAlgorithm = myAlgorithm
         """==========================调用算法模板进行种群进化========================"""
@@ -82,7 +82,7 @@ class OrderAlgorithm:
         else:
             print('没找到可行解。')
 
-        result = convert_result(self.BestIndi.Phen[0])
+        result = convert_result(self.BestIndi.Phen[0], self.model)
         print('------------------------------')
         # print(result.get_max_user_delay())
         print(result.get_max_device_time())
@@ -90,11 +90,16 @@ class OrderAlgorithm:
         print(result.comput_position)
 
     def get_result(self):
-        result = convert_result(self.BestIndi.Phen[0])
+        result = convert_result(self.BestIndi.Phen[0], self.model)
         return result.get_max_device_time(), result.cache_position, result.comput_position
 
 
 if __name__ == '__main__':
-    t = OrderAlgorithm(Model())
-    t.solve()
-    t.print()
+    for i in range(3):
+        print('-----------------', i, '-----------------')
+        t = OrderAlgorithm(Model())
+        t.solve()
+        t.print()
+        print(t.get_result()[0])
+        print(t.get_result()[0])
+

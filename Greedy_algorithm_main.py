@@ -24,7 +24,7 @@ class GreedyAlgorithm:
         decision.set_cache_position(np.zeros([self.model.N_device, self.model.N_task]))
         decision.set_comput_position(np.zeros([self.model.N_device, self.model.N_task]))
         # 迭代次数
-        N_loop = 15
+        N_loop = 10
         # 算法开始
         priority_device = np.arange(0, self.model.N_device, 1)  # 优先级矩阵，排在前面的device先做出卸载决策
         N_first_device_can_optimize_task = 1  # 优先级最高的device可以优化的task的数量
