@@ -31,6 +31,9 @@ def convert_result(order_ans):
 class OrderAlgorithm:
     def __init__(self, model):
         self.model = model
+        self.myAlgorithm = None
+        self.BestIndi = None
+        self.population = None
 
     def solve(self):
         """===============================实例化问题对象==========================="""
@@ -58,32 +61,40 @@ class OrderAlgorithm:
         myAlgorithm.trappedValue = 1e-6  # “进化停滞”判断阈值
         myAlgorithm.maxTrappedCount = 10000  # 进化停滞计数器最大上限值，如果连续maxTrappedCount代被判定进化陷入停滞，则终止进化
         myAlgorithm.logTras = 1  # 设置每隔多少代记录日志，若设置成0则表示不记录日志
-        myAlgorithm.verbose = True  # 设置是否打印输出日志信息
-        myAlgorithm.drawing = 1  # 设置绘图方式（0：不绘图；1：绘制结果图；2：绘制目标空间过程动画；3：绘制决策空间过程动画）
-
+        myAlgorithm.verbose = False  # 设置是否打印输出日志信息
+        myAlgorithm.drawing = 0  # 设置绘图方式（0：不绘图；1：绘制结果图；2：绘制目标空间过程动画；3：绘制决策空间过程动画）
+        self.myAlgorithm = myAlgorithm
         """==========================调用算法模板进行种群进化========================"""
-        [BestIndi, population] = myAlgorithm.run()  # 执行算法模板，得到最优个体以及最后一代种群，不使用先知种群
+        [self.BestIndi, self.population] = self.myAlgorithm.run()  # 执行算法模板，得到最优个体以及最后一代种群，不使用先知种群
         # [BestIndi, population] = myAlgorithm.run(prophetPop)  # 执行算法模板，得到最优个体以及最后一代种群
-        BestIndi.save('order')  # 把最优个体的信息保存到文件中
+        self.BestIndi.save('order')  # 把最优个体的信息保存到文件中
+
+    def print(self):
+
         """=================================输出结果=============================="""
-        print('评价次数：%s' % myAlgorithm.evalsNum)
-        print('时间已过 %s 秒' % myAlgorithm.passTime)
-        if BestIndi.sizes != 0:
-            print('最优的目标函数值为：%s' % BestIndi.ObjV[0][0])
+        print('评价次数：%s' % self.myAlgorithm.evalsNum)
+        print('时间已过 %s 秒' % self.myAlgorithm.passTime)
+        if self.BestIndi.sizes != 0:
+            print('最优的目标函数值为：%s' % self.BestIndi.ObjV[0][0])
             print('最优的控制变量值为：')
-            for i in range(BestIndi.Phen.shape[1]):
-                print(BestIndi.Phen[0, i])
+            for i in range(self.BestIndi.Phen.shape[1]):
+                print(self.BestIndi.Phen[0, i])
         else:
             print('没找到可行解。')
 
-        result = convert_result(BestIndi.Phen[0])
+        result = convert_result(self.BestIndi.Phen[0])
         print('------------------------------')
         # print(result.get_max_user_delay())
         print(result.get_max_device_time())
         print(result.cache_position)
         print(result.comput_position)
 
+    def get_result(self):
+        result = convert_result(self.BestIndi.Phen[0])
+        return result.get_max_device_time(), result.cache_position, result.comput_position
+
 
 if __name__ == '__main__':
     t = OrderAlgorithm(Model())
     t.solve()
+    t.print()

@@ -8,10 +8,15 @@ from multiprocessing import Pool as ProcessPool
 class GreedyAlgorithm:
     def __init__(self, model):
         self.model = model
+        self.decision = None
+        self.min_max_delay = float('inf')  # 最小的最大延迟
+        self.min_ans = None  # 达到最小最大延迟时的卸载决策
+        self.min_arrive_loop = None  # 达到最小最大延迟时的循环次数
 
     def solve(self):
         # 初始化决策对象
-        decision = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task, self.model.device_cache,
+        decision = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task,
+                            self.model.device_cache,
                             self.model.device_comput, self.model.task_cache, self.model.task_comput)
         decision.set_bandwidth(self.model.bandwidth)
         decision.set_possible(self.model.possible)
@@ -24,9 +29,7 @@ class GreedyAlgorithm:
         priority_device = np.arange(0, self.model.N_device, 1)  # 优先级矩阵，排在前面的device先做出卸载决策
         N_first_device_can_optimize_task = 1  # 优先级最高的device可以优化的task的数量
         first_device = None  # 上次优先级最高的device
-        min_max_delay = float('inf')  # 最小的最大延迟
-        min_ans = None  # 达到最小最大延迟时的卸载决策
-        min_arrive_loop = None  # 达到最小最大延迟时的循环次数
+
         for loop in range(N_loop):
 
             # 计算当前的解的目标函数
@@ -66,10 +69,10 @@ class GreedyAlgorithm:
                 #     min_arrive_loop = loop
 
                 decision.set_device_time()
-                if decision.get_max_device_time() < min_max_delay:
-                    min_max_delay = decision.get_max_device_time()
-                    min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
-                    min_arrive_loop = loop
+                if decision.get_max_device_time() < self.min_max_delay:
+                    self.min_max_delay = decision.get_max_device_time()
+                    self.min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
+                    self.min_arrive_loop = loop
 
             # 按优先级顺序进行处理
             for task in range(self.model.N_task):
@@ -90,24 +93,29 @@ class GreedyAlgorithm:
                         #     min_arrive_loop = loop
 
                         decision.set_device_time()
-                        if decision.get_max_device_time() < min_max_delay:
-                            min_max_delay = decision.get_max_device_time()
-                            min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
-                            min_arrive_loop = loop
+                        if decision.get_max_device_time() < self.min_max_delay:
+                            self.min_max_delay = decision.get_max_device_time()
+                            self.min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
+                            self.min_arrive_loop = loop
 
             # decision.calcul_every_device_exp_delay()
             decision.set_device_time()
             # 输出当前结果
             # print(loop, decision.get_max_user_delay())
             print(loop, decision.get_max_device_time())
-        # 输出最好结果
-        print('-------------------------------------')
-        print(min_max_delay)
-        print(min_ans)
-        print(min_arrive_loop)
+        self.decision = decision
+
+    def print(self):
+        """输出最好结果"""
+        print(self.min_max_delay)
+        print(self.min_ans)
+        print(self.min_arrive_loop)
+
+    def get_result(self):
+        return self.min_max_delay, self.min_ans[0], self.min_ans[1], self.min_arrive_loop
 
 
 if __name__ == '__main__':
-
     t = GreedyAlgorithm(Model())
     t.solve()
+    t.print()
