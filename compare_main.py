@@ -3,7 +3,7 @@ from Greedy_algorithm_main import GreedyAlgorithm
 from order_main import OrderAlgorithm
 import numpy as np
 import pandas as pd
-
+from pylab import *
 if __name__ == '__main__':
     N_test = 10
     g = np.zeros([N_test, 1])
@@ -25,7 +25,12 @@ if __name__ == '__main__':
         o[i, 0] = o_ans
 
     t = np.hstack([g, o])
-    pd.DataFrame(t).to_csv('compare_ans.csv')
+    x = np.linspace(0,N_test -1,N_test)
+    plt.plot(x,g)
+    plt.plot(x,o)
+    plt.show()
+
+    pd.DataFrame(t).to_csv('compare_ans.csv', header=False, index=False)
 
 
 
