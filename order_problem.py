@@ -17,6 +17,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 # 自定义问题类
 class MyProblem(ea.Problem):  # 继承Problem父类
+    """本问题是优化非排队论模型下的延迟"""
     def __init__(self, model=None):
         if not model:
             model = Model()
@@ -84,10 +85,10 @@ def subAimFunc(args):
     for step in order:
         step_user = step // model.N_task + model.N_cloud + model.N_FAP
         step_task = step % model.N_task
-        # decision.optimize_device_task_delay(step_user, step_task)
-        decision.optimize_device_task_time(step_user, step_task, decision.get_single_device_time)
+        decision.optimize_device_task_delay(step_user, step_task)
+        # decision.optimize_device_task_time(step_user, step_task, decision.get_single_device_time)
     # 计算延迟
-    # decision.calcul_every_device_exp_delay()
-    decision.set_device_time()
-    # return decision.get_max_user_delay()
-    return decision.get_max_device_time()
+    decision.calcul_every_device_exp_delay()
+    # decision.set_device_time()
+    return decision.get_max_user_delay()
+    # return decision.get_max_device_time()

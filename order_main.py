@@ -6,12 +6,12 @@ from Decision import Decision
 
 
 def convert_result(order_ans, model):
-    #model = Model()
+    # model = Model()
     # 初始化决策对象
     decision = Decision(model.N_cloud, model.N_FAP, model.N_user, model.N_task, model.device_cache,
                         model.device_comput, model.task_cache, model.task_comput)
-    # decision.set_delay(model.delay)
-    decision.set_bandwidth(model.bandwidth)
+    decision.set_delay(model.delay)
+    # decision.set_bandwidth(model.bandwidth)
     decision.set_possible(model.possible)
     # 初始解，所有缓存和计算在云端位置上
     decision.cache_position = np.zeros([model.N_device, model.N_task])
@@ -20,11 +20,11 @@ def convert_result(order_ans, model):
     for step in order_ans:
         step_user = step // model.N_task + model.N_cloud + model.N_FAP
         step_task = step % model.N_task
-        # decision.optimize_device_task_delay(step_user, step_task)
-        decision.optimize_device_task_time(step_user, step_task, decision.get_single_device_time)
+        decision.optimize_device_task_delay(step_user, step_task)
+        # decision.optimize_device_task_time(step_user, step_task, decision.get_single_device_time)
     # 计算延迟
-    # decision.calcul_every_device_exp_delay()
-    decision.set_device_time()
+    decision.calcul_every_device_exp_delay()
+    # decision.set_device_time()
     return decision
 
 
@@ -84,14 +84,14 @@ class OrderAlgorithm:
 
         result = convert_result(self.BestIndi.Phen[0], self.model)
         print('------------------------------')
-        # print(result.get_max_user_delay())
-        print(result.get_max_device_time())
+        print(result.get_max_user_delay())
+        # print(result.get_max_device_time())
         print(result.cache_position)
         print(result.comput_position)
 
     def get_result(self):
         result = convert_result(self.BestIndi.Phen[0], self.model)
-        return result.get_max_device_time(), result.cache_position, result.comput_position
+        return result.get_max_user_delay(), result.cache_position, result.comput_position, self.myAlgorithm.passTime
 
 
 if __name__ == '__main__':

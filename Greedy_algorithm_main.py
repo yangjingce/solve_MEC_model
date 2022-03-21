@@ -3,7 +3,7 @@ from Decision import Decision
 from Model import Model
 import multiprocessing as mp
 from multiprocessing import Pool as ProcessPool
-
+import time
 
 class GreedyAlgorithm:
     def __init__(self, model):
@@ -12,8 +12,10 @@ class GreedyAlgorithm:
         self.min_max_delay = float('inf')  # 最小的最大延迟
         self.min_ans = None  # 达到最小最大延迟时的卸载决策
         self.min_arrive_loop = None  # 达到最小最大延迟时的循环次数
+        self.spend_time = None  # 运行算法花费的时间
 
     def solve(self):
+        begin_time = time.process_time()
         # 初始化决策对象
         decision = Decision(self.model.N_cloud, self.model.N_FAP, self.model.N_user, self.model.N_task,
                             self.model.device_cache,
@@ -104,6 +106,8 @@ class GreedyAlgorithm:
             # print(loop, decision.get_max_user_delay())
             print(loop, decision.get_max_device_time())
         self.decision = decision
+        end_time = time.process_time()
+        self.spend_time = (end_time - begin_time)
 
     def print(self):
         """输出最好结果"""
@@ -112,7 +116,7 @@ class GreedyAlgorithm:
         print(self.min_arrive_loop)
 
     def get_result(self):
-        return self.min_max_delay, self.min_ans[0], self.min_ans[1], self.min_arrive_loop
+        return self.min_max_delay, self.min_ans[0], self.min_ans[1], self.min_arrive_loop, self.spend_time
 
 
 if __name__ == '__main__':
