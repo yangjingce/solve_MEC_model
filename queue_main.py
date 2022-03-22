@@ -89,7 +89,10 @@ class QueueAlgorithm:
 
     def get_result(self):
         result = convert_result(self.BestIndi.Phen[0], self.model)
-        return result.get_max_device_time(), result.cache_position, result.comput_position, self.myAlgorithm.passTime
+        if self.BestIndi.sizes != 0:
+            return result.get_max_device_time(), result.cache_position, result.comput_position, self.myAlgorithm.passTime
+        else:
+            return float('inf'), result.cache_position, result.comput_position, self.myAlgorithm.passTime
 
 
 if __name__ == '__main__':

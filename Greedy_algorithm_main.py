@@ -5,6 +5,7 @@ import multiprocessing as mp
 from multiprocessing import Pool as ProcessPool
 import time
 
+
 class GreedyAlgorithm:
     def __init__(self, model):
         self.model = model
@@ -57,11 +58,13 @@ class GreedyAlgorithm:
             decision.set_comput_position(np.zeros([self.model.N_device, self.model.N_task]))
 
             # 对于优先级最高的设备特殊处理
-
+            if_possible = True
             for task in range(N_first_device_can_optimize_task):
                 # decision.optimize_device_task_delay(priority_device[0], priority_device_task[priority_device[0], task])
-                decision.optimize_device_task_time(priority_device[0], priority_device_task[priority_device[0], task],
-                                                   decision.get_single_device_time)
+                if not decision.optimize_device_task_time(priority_device[0],
+                                                          priority_device_task[priority_device[0], task],
+                                                          decision.get_single_device_time):
+                    if_possible = False
 
                 # decision.calcul_every_device_exp_delay()
                 # if decision.get_max_user_delay() < min_max_delay:  # 记录最优解
@@ -71,7 +74,7 @@ class GreedyAlgorithm:
                 #     min_arrive_loop = loop
 
                 decision.set_device_time()
-                if decision.get_max_device_time() < self.min_max_delay:
+                if decision.get_max_device_time() < self.min_max_delay and if_possible:
                     self.min_max_delay = decision.get_max_device_time()
                     self.min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
                     self.min_arrive_loop = loop
@@ -84,9 +87,10 @@ class GreedyAlgorithm:
                         pass
                     else:
                         # decision.optimize_device_task_delay(priority_device[i], priority_device_task[priority_device[i], task])
-                        decision.optimize_device_task_time(priority_device[i],
-                                                           priority_device_task[priority_device[i], task],
-                                                           decision.get_single_device_time)
+                        if not decision.optimize_device_task_time(priority_device[i],
+                                                                  priority_device_task[priority_device[i], task],
+                                                                  decision.get_single_device_time):
+                            if_possible = False
 
                         # decision.calcul_every_device_exp_delay()
                         # if decision.get_max_user_delay() < min_max_delay:  # 记录最优解
@@ -95,7 +99,7 @@ class GreedyAlgorithm:
                         #     min_arrive_loop = loop
 
                         decision.set_device_time()
-                        if decision.get_max_device_time() < self.min_max_delay:
+                        if decision.get_max_device_time() < self.min_max_delay and if_possible:
                             self.min_max_delay = decision.get_max_device_time()
                             self.min_ans = np.stack((decision.cache_position, decision.comput_position), axis=0)
                             self.min_arrive_loop = loop
@@ -104,7 +108,10 @@ class GreedyAlgorithm:
             decision.set_device_time()
             # 输出当前结果
             # print(loop, decision.get_max_user_delay())
-            print(loop, decision.get_max_device_time())
+            if if_possible:
+                print(loop, decision.get_max_device_time())
+            else:
+                print(loop, 'not possible')
         self.decision = decision
         end_time = time.process_time()
         self.spend_time = (end_time - begin_time)
