@@ -210,9 +210,9 @@ class Decision:
         cur_comput = int(self.comput_position[device, task])  # 保存原始计算位置
         for comput_device in range(self.N_device):  # 穷举所有计算位置
             self.comput_position[device, task] = comput_device  # 设置为新的计算位置
-            # 计算计算约束,使用最大值计算
+            # 计算计算约束,使用由于是排队论，故使用期望值计算
             offload_user_task = np.where(self.comput_position == comput_device)
-            exp_cal = sum(self.task_comput[offload_user_task[1]])
+            exp_cal = sum(self.task_comput[offload_user_task[1]] * self.possible[offload_user_task])
             comput_limit = exp_cal - self.device_comput[0, comput_device]
 
             if comput_limit <= 0:  # 如果满足计算约束

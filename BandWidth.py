@@ -1,22 +1,36 @@
 import numpy as np
 
 
-class Bandwidth:  # 带宽类，描述了网络中设备之间的带宽
+class Bandwidth:
+    """带宽类，描述了网络中设备之间的带宽"""
     def __init__(self, N_cloud, N_FAP, N_user):
         self.N_cloud = N_cloud
         self.N_FAP = N_FAP
         self.N_user = N_user
         self.N_device = self.N_cloud + self.N_FAP + self.N_user
-        self.graph = np.zeros([self.N_device, self.N_device])  # 带宽矩阵，B_ij:从i到j的带宽，B_ii的带宽为None
+        self.graph = np.zeros([self.N_device, self.N_device])
+        """带宽矩阵，B_ij:从i到j的带宽，B_ii的带宽为None"""
 
     def set_main_bandwidth(self, bandwidth_list):
-        # 根据bandwidth_list设置主要带宽
+        """根据bandwidth_list设置主要带宽"""
         for bandwidth in bandwidth_list:
             self.graph[bandwidth[0], bandwidth[1]] = bandwidth[2]
         return
 
+    def generate_main_bandwidth(self, cloud2FAP_bandwidth, FAP2user_bandwidth):
+        """根据云到FAP的带宽和FAP到用户的带宽，生成节点间带宽，云与所有FAP相连，FAP与几个user相连"""
+        # 设置云到FAP的带宽
+        bandwidth_list = list()
+        for cloud in range(self.N_cloud):
+            for fap in range(self.N_FAP):
+                bandwidth_list.append([cloud, self.N_cloud + fap, cloud2FAP_bandwidth])
+
+        # 设置FAP到user的带宽
+
+
+
     def convert_direct_to_no(self):
-        # 把有向图转变为无向图
+        """把有向图转变为无向图"""
         for row in range(self.N_device):
             for col in range(self.N_device):
                 self.graph[row, col] = max(self.graph[row, col], self.graph[col, row])
@@ -56,8 +70,8 @@ class Bandwidth:  # 带宽类，描述了网络中设备之间的带宽
             # for 更新其他节点的带宽和路径
         return path
 
-    def find_all_bandwidth_path(self):  # 找出所有节点之间的最大带宽
-
+    def find_all_bandwidth_path(self):
+        """找出所有节点之间的最大带宽"""
         ans = []
         for point in range(self.N_device):
             cost = [0] * self.N_device
@@ -68,7 +82,7 @@ class Bandwidth:  # 带宽类，描述了网络中设备之间的带宽
         return
 
     def set_device_self_bandwidth_None(self):
-        # 把device自己到自己的带宽设为None
+        """把device自己到自己的带宽设为None"""
         self.graph[list(range(len(self.graph))), list(range(len(self.graph)))] = None
 
     def get_path(self):

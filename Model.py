@@ -8,13 +8,18 @@ from BandWidth import Bandwidth
 
 
 class Model:
-    def __init__(self):
+    def __init__(self, N_cloud=1, N_FAP=3, N_user=5, N_task=10):
         # 问题规模
-        self.N_cloud = 1  # 云服务器一个
-        self.N_FAP = 3  # FAP三个
-        self.N_user = 5  # 用户五个
-        self.N_device = self.N_cloud + self.N_FAP + self.N_user  # 所有的设备数量
-        self.N_task = 10  # 任务的数量
+        self.N_cloud = N_cloud
+        """云服务器数量"""
+        self.N_FAP = N_FAP
+        """FAP数量"""
+        self.N_user = N_user
+        """用户数量"""
+        self.N_device = self.N_cloud + self.N_FAP + self.N_user
+        """所有设备的数量"""
+        self.N_task = N_task
+        """任务的数量"""
         # # 生成延迟矩阵
         # delay = Delay(self.N_cloud, self.N_FAP, self.N_user)
         # # 设置关键节点之间的延迟
