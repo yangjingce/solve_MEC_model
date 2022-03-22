@@ -51,7 +51,7 @@ class Model:
         self.task_cache = task.task_cache  # 任务缓存内容的大小
         self.task_comput = task.task_comput  # 任务计算内容的大小
         # 生成设备
-        device = Device(self.N_cloud, self.N_FAP, self.N_user, self.N_task)
+        device = Device(self.N_cloud, self.N_FAP, self.N_user, self.N_task, 1000, 30, 10, 2000, 13, 1)
         device.set_all()
         self.device_cache = device.device_cache  # 设备的缓存能力
         self.device_comput = device.device_comput  # 设备的计算能力
