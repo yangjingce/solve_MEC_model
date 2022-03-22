@@ -18,7 +18,7 @@ class Bandwidth:
         return
 
     def generate_main_bandwidth(self, cloud2FAP_bandwidth, FAP2user_bandwidth):
-        """根据云到FAP的带宽和FAP到用户的带宽，生成节点间带宽，云与所有FAP相连，FAP与几个user相连"""
+        """根据云到FAP的带宽和FAP到用户的带宽，生成节点间带宽，云与所有FAP相连，FAP与几个user相连,数量近似服从泊松分布"""
         # 设置云到FAP的带宽
         bandwidth_list = list()
         for cloud in range(self.N_cloud):
@@ -26,6 +26,20 @@ class Bandwidth:
                 bandwidth_list.append([cloud, self.N_cloud + fap, cloud2FAP_bandwidth])
 
         # 设置FAP到user的带宽
+        p = self.N_cloud + self.N_FAP
+        # 单个FAP下连的user数量近似于泊松分布
+        for fap in range(self.N_cloud, self.N_cloud + self.N_FAP):
+            if fap == self.N_cloud + self.N_FAP - 1:  # 如果是最后一个FAP，则剩下的user都分配给它
+                one_fap_user = self.N_device
+            else:
+                one_fap_user = np.random.poisson((self.N_device - p)/(self.N_cloud + self.N_FAP - fap))
+                one_fap_user = min(p + one_fap_user, self.N_device)
+            for user in range(p, one_fap_user):
+                bandwidth_list.append([fap, user, FAP2user_bandwidth])
+            p = one_fap_user
+            if p == self.N_device:
+                break
+        return bandwidth_list
 
 
 
@@ -88,15 +102,18 @@ class Bandwidth:
     def get_path(self):
         return self.graph
 
+
 if __name__ == '__main__':
+
     a = Bandwidth(1, 3, 5)
-    print(a.graph)
-    a.set_main_bandwidth(
-        [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
-    print(a.graph)
-    a.convert_direct_to_no()
-    print(a.graph)
-    a.find_all_bandwidth_path()
-    print(a.graph)
-    a.set_device_self_bandwidth_None()
-    print(a.graph)
+    print(a.generate_main_bandwidth(100, 10))
+    # print(a.graph)
+    # a.set_main_bandwidth(
+    #     [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
+    # print(a.graph)
+    # a.convert_direct_to_no()
+    # print(a.graph)
+    # a.find_all_bandwidth_path()
+    # print(a.graph)
+    # a.set_device_self_bandwidth_None()
+    # print(a.graph)
