@@ -158,7 +158,7 @@ class Decision:
             return 0
         else:  # 否则，包含等待和处理两部分时间
             return self.calcul_single_device_wait_time(device) + \
-               self.calcul_single_device_single_task_process_time(device, task)
+                   self.calcul_single_device_single_task_process_time(device, task)
 
     def calcul_task_transmit_time(self, source_device, target_device, task):
         """任务在节点间传输的时间"""
@@ -224,6 +224,9 @@ class Decision:
         """改变单个设备单个任务的卸载决策，以优化排队论下的延迟"""
         possible_cache_device = self.find_possible_cache_device(device, task)
         possible_comput_device = self.find_possible_comput_device(device, task)
+        # 如果不存在符合约束的缓存位置或者计算位置
+        if possible_cache_device == [] or possible_comput_device == []:
+            return False
         # 记录最好位置
         best_cache_position = self.cache_position[device, task]
         best_comput_position = self.comput_position[device, task]
@@ -241,9 +244,7 @@ class Decision:
         # 使用最好位置
         self.cache_position[device, task] = best_cache_position
         self.comput_position[device, task] = best_comput_position
-
-
-
+        return True
 
     def set_single_device_single_task_time(self, device, task):
         """计算单个设备单个任务的时延，放入矩阵，在排队论下"""
@@ -276,7 +277,3 @@ class Decision:
     def get_max_device_time(self):
         """返回所有用户最大的期望延迟，排队论下"""
         return self.every_device_time.max()
-
-
-
-
