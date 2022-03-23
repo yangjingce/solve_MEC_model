@@ -190,7 +190,11 @@ class Decision:
         """寻找可能的缓存位置"""
         possible_cache_device = []
         cur_cache = int(self.cache_position[device, task])  # 保存原始缓存位置
-        for cache_device in range(self.N_device):  # 穷举所有缓存位置
+
+        s = list(range(self.N_cloud + self.N_FAP))  # 只穷举cloud,fap和自生
+        s.append(device)
+        for cache_device in s:
+        # for cache_device in range(self.N_device):  # 穷举所有缓存位置
             self.cache_position[device, task] = cache_device  # 设置为新的缓存位置
             # 计算缓存约束
             sum_cache = 0
@@ -208,7 +212,11 @@ class Decision:
         """寻找可能的计算位置"""
         possible_comput_device = []
         cur_comput = int(self.comput_position[device, task])  # 保存原始计算位置
-        for comput_device in range(self.N_device):  # 穷举所有计算位置
+
+        s = list(range(self.N_cloud + self.N_FAP))  # 只穷举cloud,fap和自生
+        s.append(device)
+        for comput_device in s:
+        # for comput_device in range(self.N_device):  # 穷举所有计算位置
             self.comput_position[device, task] = comput_device  # 设置为新的计算位置
             # 计算计算约束,使用由于是排队论，故使用期望值计算
             offload_user_task = np.where(self.comput_position == comput_device)

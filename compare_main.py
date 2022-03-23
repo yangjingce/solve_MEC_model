@@ -53,22 +53,22 @@ if __name__ == '__main__':
         # t = np.hstack([g, q])
         # compare_user_ans[:, i * 4: (i + 1)*4] = t.copy()
         same_rate[1, i] = same_ans_count / N_test
-    pd.DataFrame(compare_user_g_ans).to_csv(
-        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_ans' + '.csv',
-        header=False, index=False)
-    pd.DataFrame(compare_user_g_time).to_csv(
-        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_time' + '.csv',
-        header=False, index=False)
-    pd.DataFrame(compare_user_q_ans).to_csv(
-        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_ans' + '.csv',
-        header=False, index=False)
-    pd.DataFrame(compare_user_q_time).to_csv(
-        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_time' + '.csv',
-        header=False, index=False)
+        pd.DataFrame(compare_user_g_ans).to_csv(
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_ans' + '.csv',
+            header=False, index=False)
+        pd.DataFrame(compare_user_g_time).to_csv(
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_time' + '.csv',
+            header=False, index=False)
+        pd.DataFrame(compare_user_q_ans).to_csv(
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_ans' + '.csv',
+            header=False, index=False)
+        pd.DataFrame(compare_user_q_time).to_csv(
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_time' + '.csv',
+            header=False, index=False)
 
-    pd.DataFrame(same_rate).to_csv(str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201)
-                                   + 'same_rate' + '.csv',
-                                   header=False, index=False)
+        pd.DataFrame(same_rate).to_csv(str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201)
+                                       + 'same_rate' + '.csv',
+                                       header=False, index=False)
     # g = np.zeros([N_test, 2])
     # q = np.zeros([N_test, 2])
     #
