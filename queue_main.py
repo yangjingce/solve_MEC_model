@@ -42,7 +42,7 @@ class QueueAlgorithm:
         # NIND = 1000  # 种群规模
         # Field = ea.crtfld(Encoding, problem.varTypes, problem.ranges, problem.borders)  # 创建区域描述器
         # population = ea.Population(Encoding, Field, NIND)  # 实例化种群对象（此时种群还没被初始化，仅仅是完成种群对象的实例化）
-        NIND = 100  # 总种群规模
+        NIND = 20  # 总种群规模
         N_population = 4  # 种群数
         NINDs = [NIND // N_population] * N_population  # 种群规模
         population = [None] * N_population  # 创建种群列表
@@ -55,9 +55,9 @@ class QueueAlgorithm:
         # myAlgorithm.mutOper.Pm = 1  # 变异概率
 
         myAlgorithm = ea.soea_multi_SEGA_templet(problem, population)  # 实例化一个算法模板对象
-        myAlgorithm.MAXGEN = 5  # 最大进化代数
+        myAlgorithm.MAXGEN = 20  # 最大进化代数
         myAlgorithm.trappedValue = 1e-6  # “进化停滞”判断阈值
-        myAlgorithm.maxTrappedCount = 10000  # 进化停滞计数器最大上限值，如果连续maxTrappedCount代被判定进化陷入停滞，则终止进化
+        myAlgorithm.maxTrappedCount = 3  # 进化停滞计数器最大上限值，如果连续maxTrappedCount代被判定进化陷入停滞，则终止进化
         myAlgorithm.logTras = 1  # 设置每隔多少代记录日志，若设置成0则表示不记录日志
         myAlgorithm.verbose = True  # 设置是否打印输出日志信息
         myAlgorithm.drawing = 0  # 设置绘图方式（0：不绘图；1：绘制结果图；2：绘制目标空间过程动画；3：绘制决策空间过程动画）

@@ -10,15 +10,24 @@ if __name__ == '__main__':
     N_FAP = 10
     N_user = 25
     # 实验次数
-    N_test = 2
+    N_test = 5
     # 改变用户数
-    temp_user = list(range(10, 201, 5))
-    compare_user_ans = np.zeros([1, len(temp_user)])
-    same_rate = np.zeros([1, len(temp_user)])
+    temp_user = list(range(10, 41, 5))
+    # compare_user_ans = np.zeros([N_test, len(temp_user) * 4])
+    compare_user_g_ans = np.zeros([N_test + 1, len(temp_user)])
+    compare_user_g_time = np.zeros([N_test + 1, len(temp_user)])
+    compare_user_q_ans = np.zeros([N_test + 1, len(temp_user)])
+    compare_user_q_time = np.zeros([N_test + 1, len(temp_user)])
+    same_rate = np.zeros([2, len(temp_user)])
     for i in range(len(temp_user)):
-        g = np.zeros([N_test, 2])
-        q = np.zeros([N_test, 2])
+        # g = np.zeros([N_test, 2])
+        # q = np.zeros([N_test, 2])
         same_ans_count = 0
+        compare_user_g_ans[0, i] = temp_user[i]
+        compare_user_g_time[0, i] = temp_user[i]
+        compare_user_q_ans[0, i] = temp_user[i]
+        compare_user_q_time[0, i] = temp_user[i]
+        same_rate[0, i] = temp_user[i]
         for j in range(N_test):
 
             print('----------', temp_user[i], '----------', j, '------------')
@@ -31,17 +40,32 @@ if __name__ == '__main__':
             queue = QueueAlgorithm(model)
             queue.solve()
             q_ans, q_cache, q_comput, q_time = queue.get_result()
-            g[j, 0] = g_ans
-            g[j, 1] = g_time
-            q[j, 0] = q_ans
-            q[j, 1] = q_time
+            # g[j, 0] = g_ans
+            # g[j, 1] = g_time
+            # q[j, 0] = q_ans
+            # q[j, 1] = q_time
+            compare_user_g_ans[j + 1, i] = g_ans
+            compare_user_g_time[j + 1, i] = g_time
+            compare_user_q_ans[j + 1, i] = q_ans
+            compare_user_q_time[j + 1, i] = q_time
             if abs(g_ans - q_ans) < 10 ** (-6):
                 same_ans_count += 1
-        t = np.hstack([g, q])
-        compare_user_ans[0, i] = t.copy()
-        same_rate[0, i] = same_ans_count / N_test
-    pd.DataFrame(compare_user_ans).to_csv(str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) +'ans_and_time' + '.csv',
-                                          header=False, index=False)
+        # t = np.hstack([g, q])
+        # compare_user_ans[:, i * 4: (i + 1)*4] = t.copy()
+        same_rate[1, i] = same_ans_count / N_test
+    pd.DataFrame(compare_user_g_ans).to_csv(
+        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_ans' + '.csv',
+        header=False, index=False)
+    pd.DataFrame(compare_user_g_time).to_csv(
+        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_time' + '.csv',
+        header=False, index=False)
+    pd.DataFrame(compare_user_q_ans).to_csv(
+        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_ans' + '.csv',
+        header=False, index=False)
+    pd.DataFrame(compare_user_q_time).to_csv(
+        str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_time' + '.csv',
+        header=False, index=False)
+
     pd.DataFrame(same_rate).to_csv(str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201)
                                    + 'same_rate' + '.csv',
                                    header=False, index=False)
