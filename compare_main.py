@@ -12,7 +12,9 @@ if __name__ == '__main__':
     # 实验次数
     N_test = 5
     # 改变用户数
-    temp_user = list(range(10, 41, 5))
+    begin_user = 45
+    end_user = 201
+    temp_user = list(range(begin_user, end_user, 5))
     # compare_user_ans = np.zeros([N_test, len(temp_user) * 4])
     compare_user_g_ans = np.zeros([N_test + 1, len(temp_user)])
     compare_user_g_time = np.zeros([N_test + 1, len(temp_user)])
@@ -53,20 +55,21 @@ if __name__ == '__main__':
         # t = np.hstack([g, q])
         # compare_user_ans[:, i * 4: (i + 1)*4] = t.copy()
         same_rate[1, i] = same_ans_count / N_test
+        # 保存文件
         pd.DataFrame(compare_user_g_ans).to_csv(
-            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_ans' + '.csv',
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'g_ans' + '.csv',
             header=False, index=False)
         pd.DataFrame(compare_user_g_time).to_csv(
-            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'g_time' + '.csv',
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'g_time' + '.csv',
             header=False, index=False)
         pd.DataFrame(compare_user_q_ans).to_csv(
-            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_ans' + '.csv',
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'q_ans' + '.csv',
             header=False, index=False)
         pd.DataFrame(compare_user_q_time).to_csv(
-            str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201) + 'q_time' + '.csv',
+            str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'q_time' + '.csv',
             header=False, index=False)
 
-        pd.DataFrame(same_rate).to_csv(str(N_cloud) + '_' + str(N_FAP) + '_' + str(10) + '2' + str(201)
+        pd.DataFrame(same_rate).to_csv(str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user)
                                        + 'same_rate' + '.csv',
                                        header=False, index=False)
     # g = np.zeros([N_test, 2])
