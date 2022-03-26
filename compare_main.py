@@ -13,7 +13,7 @@ if __name__ == '__main__':
     N_test = 5
     # 改变用户数
     begin_user = 45
-    end_user = 201
+    end_user = 71
     temp_user = list(range(begin_user, end_user, 5))
     # compare_user_ans = np.zeros([N_test, len(temp_user) * 4])
     compare_user_g_ans = np.zeros([N_test + 1, len(temp_user)])

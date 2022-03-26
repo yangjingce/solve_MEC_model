@@ -31,6 +31,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\1_10_45to71g_time.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\Result\Phen.csv">
           <value>
             <Attribute>
