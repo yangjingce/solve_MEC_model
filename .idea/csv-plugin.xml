@@ -3,35 +3,56 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="\1_10_102201g_ans.csv">
+        <entry key="\1_10_25cloud_cache0.5to2g_ans.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\1_10_102201g_time.csv">
+        <entry key="\1_10_25cloud_cache0.5to2g_time.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\1_10_102201q_time.csv">
+        <entry key="\1_10_25cloud_cache0.5to2q_ans.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\1_10_102201same_rate.csv">
+        <entry key="\1_10_25cloud_cache0.5to2q_time.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="\1_10_45to71g_time.csv">
+        <entry key="\1_10_25user_cache0.5to2g_ans.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\1_3to25_25g_ans.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\1_3to25_25g_time.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\1_3to25_25q_ans.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -45,7 +66,14 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\compare_ans.csv">
+        <entry key="\order\Chrom.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\order\Field.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -53,6 +81,13 @@
           </value>
         </entry>
         <entry key="\order\FitnV.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\order\ObjV.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
