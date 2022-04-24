@@ -4,6 +4,7 @@ from queue_main import QueueAlgorithm
 import numpy as np
 import pandas as pd
 from pylab import *
+from Device import Device
 
 if __name__ == '__main__':
     N_cloud = 1
@@ -52,21 +53,26 @@ if __name__ == '__main__':
             same_rate[1, i] = same_ans_count / N_test
             # 保存文件
             pd.DataFrame(compare_user_g_ans).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'g_ans' + '.csv',
-                header=False, index=False)
+                                                    str(N_cloud) + '_' + str(N_FAP) + '_' + str(
+                begin_user) + 'to' + str(end_user) + 'g_ans' + '.csv',
+                                                    header=False, index=False)
             pd.DataFrame(compare_user_g_time).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'g_time' + '.csv',
-                header=False, index=False)
+                                                     str(N_cloud) + '_' + str(N_FAP) + '_' + str(
+                begin_user) + 'to' + str(end_user) + 'g_time' + '.csv',
+                                                     header=False, index=False)
             pd.DataFrame(compare_user_q_ans).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'q_ans' + '.csv',
-                header=False, index=False)
+                                                    str(N_cloud) + '_' + str(N_FAP) + '_' + str(
+                begin_user) + 'to' + str(end_user) + 'q_ans' + '.csv',
+                                                    header=False, index=False)
             pd.DataFrame(compare_user_q_time).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'q_time' + '.csv',
-                header=False, index=False)
+                                                     str(N_cloud) + '_' + str(N_FAP) + '_' + str(
+                begin_user) + 'to' + str(end_user) + 'q_time' + '.csv',
+                                                     header=False, index=False)
             pd.DataFrame(same_rate).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user)
-                + 'same_rate' + '.csv',
-                header=False, index=False)
+                                           str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(
+                end_user)
+                                           + 'same_rate' + '.csv',
+                                           header=False, index=False)
     elif change_var == 'fap':
         # 改变的fap数
         begin_fap = 3
@@ -106,20 +112,25 @@ if __name__ == '__main__':
             same_rate[1, i] = same_ans_count / N_test
             # 保存文件
             pd.DataFrame(compare_fap_g_ans).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'g_ans' + '.csv',
-                header=False, index=False)
+                                                   str(N_cloud) + '_' + str(begin_fap) + 'to' + str(
+                end_fap) + '_' + str(N_user) + 'g_ans' + '.csv',
+                                                   header=False, index=False)
             pd.DataFrame(compare_fap_g_time).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'g_time' + '.csv',
-                header=False, index=False)
+                                                    str(N_cloud) + '_' + str(begin_fap) + 'to' + str(
+                end_fap) + '_' + str(N_user) + 'g_time' + '.csv',
+                                                    header=False, index=False)
             pd.DataFrame(compare_fap_q_ans).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'q_ans' + '.csv',
-                header=False, index=False)
+                                                   str(N_cloud) + '_' + str(begin_fap) + 'to' + str(
+                end_fap) + '_' + str(N_user) + 'q_ans' + '.csv',
+                                                   header=False, index=False)
             pd.DataFrame(compare_fap_q_time).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'q_time' + '.csv',
+                                                    str(N_cloud) + '_' + str(begin_fap) + 'to' + str(
+                end_fap) + '_' + str(N_user) + 'q_time' + '.csv',
+                                                    header=False, index=False)
+            pd.DataFrame(same_rate).to_csv(
+                change_var + '/' + str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user)
+                + 'same_rate' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(same_rate).to_csv(change_var + '/' + str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user)
-                                           + 'same_rate' + '.csv',
-                                           header=False, index=False)
     else:
         # 改变能力
         begin = 0.1
@@ -131,6 +142,11 @@ if __name__ == '__main__':
         compare_q_ans = np.zeros([N_test + 1, len(temp)])
         compare_q_time = np.zeros([N_test + 1, len(temp)])
         same_rate = np.zeros([2, len(temp)])
+        # 先生成N_test个模型
+        model_list = [None] * N_test
+        for f in range(N_test):
+            model_list[f] = Model(N_cloud, N_FAP, N_user)
+
         for i in range(len(temp)):
             same_ans_count = 0
             compare_g_ans[0, i] = temp[i]
@@ -140,20 +156,28 @@ if __name__ == '__main__':
             same_rate[0, i] = temp[i]
             for j in range(N_test):
                 print('----------', temp[i], '----------', j, '------------')
+                # 改变设备的能力
+                model = model_list[j]
+                # 生成新的设备能力
                 if change_var == 'cloud_cache':
-                    model = Model(N_cloud, N_FAP, N_user, cache_times=(temp[i], 1, 1), comput_times=(1, 1, 1))
+
+                    device = Device(model.N_cloud, model.N_FAP, model.N_user, model.N_task, 1000 * temp[i], 30, 10, 2000, 13, 1)
                 elif change_var == 'fap_cache':
-                    model = Model(N_cloud, N_FAP, N_user, cache_times=(1, temp[i], 1), comput_times=(1, 1, 1))
+                    device = Device(model.N_cloud, model.N_FAP, model.N_user, model.N_task, 1000, 30 * temp[i], 10,  2000, 13, 1)
                 elif change_var == 'user_cache':
-                    model = Model(N_cloud, N_FAP, N_user, cache_times=(1, 1, temp[i]), comput_times=(1, 1, 1))
+                    device = Device(model.N_cloud, model.N_FAP, model.N_user, model.N_task, 1000, 30, 10 * temp[i], 2000, 13, 1)
                 elif change_var == 'cloud_comput':
-                    model = Model(N_cloud, N_FAP, N_user, cache_times=(1, 1, 1), comput_times=(temp[i], 1, 1))
+                    device = Device(model.N_cloud, model.N_FAP, model.N_user, model.N_task, 1000, 30, 10, 2000 * temp[i], 13, 1)
                 elif change_var == 'fap_comput':
-                    model = Model(N_cloud, N_FAP, N_user, cache_times=(1, 1, 1), comput_times=(1, temp[i], 1))
+                    device = Device(model.N_cloud, model.N_FAP, model.N_user, model.N_task, 1000, 30, 10, 2000, 13 * temp[i], 1)
                 elif change_var == 'user_comput':
-                    model = Model(N_cloud, N_FAP, N_user, cache_times=(1, 1, 1), comput_times=(1, 1, temp[i]))
+                    device = Device(model.N_cloud, model.N_FAP, model.N_user, model.N_task, 1000, 30, 10, 2000, 13, 1 * temp[i])
                 else:
-                    model = None
+                    pass
+
+                device.set_all()
+                model.device_cache = device.device_cache  # 设备的缓存能力
+                model.device_comput = device.device_comput  # 设备的计算能力
                 # 博弈算法
                 greedy = GreedyAlgorithm(model)
                 greedy.solve()
@@ -172,23 +196,22 @@ if __name__ == '__main__':
             same_rate[1, i] = same_ans_count / N_test
             # 保存文件
             pd.DataFrame(compare_g_ans).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
-                change_var + str(begin) + 'to' + str(end) + 'g_ans' + '.csv',
-                header=False, index=False)
+                                               str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
+                                               change_var + str(begin) + 'to' + str(end) + 'g_ans' + '.csv',
+                                               header=False, index=False)
             pd.DataFrame(compare_g_time).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
-                change_var + str(begin) + 'to' + str(end) + 'g_time' + '.csv',
-                header=False, index=False)
+                                                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
+                                                change_var + str(begin) + 'to' + str(end) + 'g_time' + '.csv',
+                                                header=False, index=False)
             pd.DataFrame(compare_q_ans).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
-                change_var + str(begin) + 'to' + str(end) + 'q_ans' + '.csv',
-                header=False, index=False)
+                                               str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
+                                               change_var + str(begin) + 'to' + str(end) + 'q_ans' + '.csv',
+                                               header=False, index=False)
             pd.DataFrame(compare_q_time).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
-                change_var + str(begin) + 'to' + str(end) + 'q_time' + '.csv',
-                header=False, index=False)
+                                                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
+                                                change_var + str(begin) + 'to' + str(end) + 'q_time' + '.csv',
+                                                header=False, index=False)
             pd.DataFrame(same_rate).to_csv(change_var + '/' +
-                str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
-                change_var + str(begin) + 'to' + str(end) + 'same_rate' + '.csv',
-                header=False, index=False)
-
+                                           str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
+                                           change_var + str(begin) + 'to' + str(end) + 'same_rate' + '.csv',
+                                           header=False, index=False)
