@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
-    change_var_list = ['end user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
+    change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
                        'user_comput']
     change_var = change_var_list[6]
-    if change_var == 'end user':
+    if change_var == 'user':
         # 改变终端用户的数量
         # 读取数据
-        g_ans = np.loadtxt('1_10_10to70g_ans.csv', delimiter=',')
-        g_time = np.loadtxt('1_10_10to70g_time.csv', delimiter=',')
-        q_ans = np.loadtxt('1_10_10to70q_ans.csv', delimiter=',')
-        q_time = np.loadtxt('1_10_10to70q_time.csv', delimiter=',')
+        g_ans = np.loadtxt(change_var + '/' + '1_10_10to70g_ans.csv', delimiter=',')
+        g_time = np.loadtxt(change_var + '/' + '1_10_10to70g_time.csv', delimiter=',')
+        q_ans = np.loadtxt(change_var + '/' + '1_10_10to70q_ans.csv', delimiter=',')
+        q_time = np.loadtxt(change_var + '/' + '1_10_10to70q_time.csv', delimiter=',')
         # 数据处理
         user_range = g_ans[0, :]
         g_ans = g_ans[1:, :]
@@ -48,10 +48,10 @@ if __name__ == '__main__':
     elif change_var == 'fap':
         # 改变fap的数量
         # 读取数据
-        g_ans = np.loadtxt('1_3to25_25g_ans.csv', delimiter=',')
-        g_time = np.loadtxt('1_3to25_25g_time.csv', delimiter=',')
-        q_ans = np.loadtxt('1_3to25_25q_ans.csv', delimiter=',')
-        q_time = np.loadtxt('1_3to25_25q_time.csv', delimiter=',')
+        g_ans = np.loadtxt(change_var + '/' + '1_3to25_25g_ans.csv', delimiter=',')
+        g_time = np.loadtxt(change_var + '/' + '1_3to25_25g_time.csv', delimiter=',')
+        q_ans = np.loadtxt(change_var + '/' + '1_3to25_25q_ans.csv', delimiter=',')
+        q_time = np.loadtxt(change_var + '/' + '1_3to25_25q_time.csv', delimiter=',')
         # 数据处理
         user_range = g_ans[0, :]
         g_ans = g_ans[1:, :]
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         N_cloud = 1
         N_FAP = 10
         N_user = 25
-        file_name_prefix = str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) + change_var + str(begin) + 'to' + str(
+        file_name_prefix = change_var + '/' + str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) + change_var + str(begin) + 'to' + str(
             end)
         # 读取数据
         g_ans = np.loadtxt(file_name_prefix + 'g_ans.csv', delimiter=',')
@@ -120,17 +120,3 @@ if __name__ == '__main__':
         plt.title('delay versus ' + change_var + '\' number')
         plt.show()
 
-        # if change_var == 'cloud_cache':
-        #     'N_cloud_N_FAP_N_user' + change_var + str(begin) + 'to' + str(end)
-        # elif change_var == 'fap_cache':
-        #
-        # elif change_var == 'user_cache':
-        #
-        # elif change_var == 'cloud_comput':
-        #
-        # elif change_var == 'fap_comput':
-        #
-        # elif change_var == 'user_comput':
-        #
-        # else:
-        #     pass
