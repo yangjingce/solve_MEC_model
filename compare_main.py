@@ -12,10 +12,10 @@ if __name__ == '__main__':
     # 实验次数
     N_test = 5
     # 改变的变量
-    change_var = 'user_comput'
+    change_var = 'cloud_comput'
     if change_var == 'user':
         # 改变用户数
-        begin_user = 45
+        begin_user = 10
         end_user = 71
         temp_user = list(range(begin_user, end_user, 5))
 
@@ -122,9 +122,9 @@ if __name__ == '__main__':
                                            header=False, index=False)
     else:
         # 改变能力
-        begin = 0.5
-        end = 2
-        temp = np.linspace(begin, end, 10)
+        begin = 0.1
+        end = 5
+        temp = np.linspace(begin, end, 5)
 
         compare_g_ans = np.zeros([N_test + 1, len(temp)])
         compare_g_time = np.zeros([N_test + 1, len(temp)])
