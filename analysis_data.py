@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
-    change_var_list = ['end user', 'fap']
-    change_var = change_var_list[1]
+    change_var_list = ['end user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
+                       'user_comput']
+    change_var = change_var_list[6]
     if change_var == 'end user':
         # 改变终端用户的数量
         # 读取数据
@@ -88,7 +89,8 @@ if __name__ == '__main__':
         N_cloud = 1
         N_FAP = 10
         N_user = 25
-        file_name_prefix = str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) + change_var + str(begin) + 'to' + str(end)
+        file_name_prefix = str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) + change_var + str(begin) + 'to' + str(
+            end)
         # 读取数据
         g_ans = np.loadtxt(file_name_prefix + 'g_ans.csv', delimiter=',')
         g_time = np.loadtxt(file_name_prefix + 'g_time.csv', delimiter=',')
@@ -115,7 +117,7 @@ if __name__ == '__main__':
         plt.legend(loc='upper left')
         plt.xlabel(change_var)
         plt.ylabel('delay(s)')
-        plt.title('delay versus '+ change_var+ '\' number')
+        plt.title('delay versus ' + change_var + '\' number')
         plt.show()
 
         # if change_var == 'cloud_cache':
@@ -132,4 +134,3 @@ if __name__ == '__main__':
         #
         # else:
         #     pass
-

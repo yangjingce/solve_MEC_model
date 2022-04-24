@@ -51,19 +51,19 @@ if __name__ == '__main__':
 
             same_rate[1, i] = same_ans_count / N_test
             # 保存文件
-            pd.DataFrame(compare_user_g_ans).to_csv(
+            pd.DataFrame(compare_user_g_ans).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'g_ans' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_user_g_time).to_csv(
+            pd.DataFrame(compare_user_g_time).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'g_time' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_user_q_ans).to_csv(
+            pd.DataFrame(compare_user_q_ans).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'q_ans' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_user_q_time).to_csv(
+            pd.DataFrame(compare_user_q_time).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user) + 'q_time' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(same_rate).to_csv(
+            pd.DataFrame(same_rate).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(begin_user) + 'to' + str(end_user)
                 + 'same_rate' + '.csv',
                 header=False, index=False)
@@ -105,19 +105,19 @@ if __name__ == '__main__':
 
             same_rate[1, i] = same_ans_count / N_test
             # 保存文件
-            pd.DataFrame(compare_fap_g_ans).to_csv(
+            pd.DataFrame(compare_fap_g_ans).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'g_ans' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_fap_g_time).to_csv(
+            pd.DataFrame(compare_fap_g_time).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'g_time' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_fap_q_ans).to_csv(
+            pd.DataFrame(compare_fap_q_ans).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'q_ans' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_fap_q_time).to_csv(
+            pd.DataFrame(compare_fap_q_time).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user) + 'q_time' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(same_rate).to_csv(str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user)
+            pd.DataFrame(same_rate).to_csv(change_var + '/' + str(N_cloud) + '_' + str(begin_fap) + 'to' + str(end_fap) + '_' + str(N_user)
                                            + 'same_rate' + '.csv',
                                            header=False, index=False)
     else:
@@ -171,23 +171,23 @@ if __name__ == '__main__':
 
             same_rate[1, i] = same_ans_count / N_test
             # 保存文件
-            pd.DataFrame(compare_g_ans).to_csv(
+            pd.DataFrame(compare_g_ans).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
                 change_var + str(begin) + 'to' + str(end) + 'g_ans' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_g_time).to_csv(
+            pd.DataFrame(compare_g_time).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
                 change_var + str(begin) + 'to' + str(end) + 'g_time' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_q_ans).to_csv(
+            pd.DataFrame(compare_q_ans).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
                 change_var + str(begin) + 'to' + str(end) + 'q_ans' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(compare_q_time).to_csv(
+            pd.DataFrame(compare_q_time).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
                 change_var + str(begin) + 'to' + str(end) + 'q_time' + '.csv',
                 header=False, index=False)
-            pd.DataFrame(same_rate).to_csv(
+            pd.DataFrame(same_rate).to_csv(change_var + '/' +
                 str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) +
                 change_var + str(begin) + 'to' + str(end) + 'same_rate' + '.csv',
                 header=False, index=False)
