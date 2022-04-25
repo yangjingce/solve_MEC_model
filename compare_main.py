@@ -134,8 +134,8 @@ if __name__ == '__main__':
     else:
         # 改变能力
         begin = 0.5
-        end = 5
-        temp = np.linspace(begin, end, 3)
+        end = 3
+        temp = np.linspace(begin, end, 5)
 
         compare_g_ans = np.zeros([N_test + 1, len(temp)])
         compare_g_time = np.zeros([N_test + 1, len(temp)])
