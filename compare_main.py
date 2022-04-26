@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # 实验次数
     N_test = 5
     # 改变的变量
-    change_var = 'cloud_comput'
+    change_var = 'fap_comput'
     if change_var == 'user':
         # 改变用户数
         begin_user = 10
@@ -133,9 +133,9 @@ if __name__ == '__main__':
                 header=False, index=False)
     else:
         # 改变能力
-        begin = 0.5
-        end = 3
-        temp = np.linspace(begin, end, 5)
+        begin = 100
+        end = 200
+        temp = np.linspace(begin, end, 10)
 
         compare_g_ans = np.zeros([N_test + 1, len(temp)])
         compare_g_time = np.zeros([N_test + 1, len(temp)])
