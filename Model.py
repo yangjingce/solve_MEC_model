@@ -34,7 +34,8 @@ class Model:
         # 设置关键节点之间的带宽
         # bandwidth.set_main_bandwidth([(0, 1, 10), (0, 2, 10), (0, 3, 10), (1, 4, 100),
         #                               (1, 5, 100), (2, 6, 100), (2, 7, 100), (3, 8, 100)])
-        bandwidth.set_main_bandwidth(bandwidth.generate_main_bandwidth(100, 10))
+        # bandwidth.set_main_bandwidth(bandwidth.generate_main_bandwidth(100, 10))
+        bandwidth.set_main_bandwidth(bandwidth.generate_main_bandwidth(10, 100))
         bandwidth.convert_direct_to_no()
         bandwidth.find_all_bandwidth_path()
         bandwidth.set_device_self_bandwidth_None()
