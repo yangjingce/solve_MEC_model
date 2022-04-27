@@ -11,7 +11,7 @@ if __name__ == '__main__':
     N_FAP = 10
     N_user = 25
     # 实验次数
-    N_test = 5
+    N_test = 3
     # 改变的变量
     change_var = 'fap_comput'
     if change_var == 'user':
@@ -133,9 +133,9 @@ if __name__ == '__main__':
                 header=False, index=False)
     else:
         # 改变能力
-        begin = 100
-        end = 200
-        temp = np.linspace(begin, end, 10)
+        begin = 1
+        end = 10
+        temp = np.linspace(begin, end, 5)
 
         compare_g_ans = np.zeros([N_test + 1, len(temp)])
         compare_g_time = np.zeros([N_test + 1, len(temp)])

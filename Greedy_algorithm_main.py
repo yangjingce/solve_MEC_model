@@ -4,6 +4,7 @@ from Model import Model
 import multiprocessing as mp
 from multiprocessing import Pool as ProcessPool
 import time
+from Device import Device
 
 
 class GreedyAlgorithm:
@@ -27,7 +28,7 @@ class GreedyAlgorithm:
         decision.set_cache_position(np.zeros([self.model.N_device, self.model.N_task]))
         decision.set_comput_position(np.zeros([self.model.N_device, self.model.N_task]))
         # 迭代次数
-        N_loop = 5
+        N_loop = 3
         # 算法开始
         priority_device = np.arange(0, self.model.N_device, 1)  # 优先级矩阵，排在前面的device先做出卸载决策
         N_first_device_can_optimize_task = 1  # 优先级最高的device可以优化的task的数量
@@ -127,6 +128,16 @@ class GreedyAlgorithm:
 
 
 if __name__ == '__main__':
-    t = GreedyAlgorithm(Model())
+    model = Model(1,10,25)
+    device = Device(1,10,25,10,1000,30,5,2000,130,5)
+    device.set_all()
+    model.device_cache = device.device_cache  # 设备的缓存能力
+    model.device_comput = device.device_comput  # 设备的计算能力
+
+    t = GreedyAlgorithm(model)
     t.solve()
-    t.print()
+    g_ans, g_cache, g_comput, g_arrive_loop, g_time = t.get_result()
+    print(g_cache)
+    print(g_comput)
+
+    # t.print()

@@ -10,12 +10,13 @@ class Task:
     def set_cache(self):
         """设置任务的缓存大小"""
         # self.task_cache = np.array([0, 0, 0, 10, 10, 20, 20, 50, 50, 100])
-        self.task_cache = np.array([0, 1, 0, 5, 10, 20, 20, 50, 50, 100])
+        self.task_cache = np.array([0, 10, 10, 5, 0, 3, 1, 5, 20, 50])
 
     def set_comput(self):
         """设置任务的计算需求"""
         # self.task_comput = np.array([100, 50, 50, 20, 20, 10, 10, 0, 0, 0])
-        self.task_comput = np.array([100, 50, 50, 10, 20, 5, 0, 0, 0.5, 0.5])
+        # self.task_comput = np.array([100, 50, 50, 10, 20, 5, 0, 0, 0.5, 0.5])
+        self.task_comput = np.array([50, 50, 10, 10, 1, 1, 0, 0, 0, 0])
 
 
 if __name__ == "__main__":

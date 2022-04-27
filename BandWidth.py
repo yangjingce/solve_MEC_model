@@ -106,8 +106,12 @@ class Bandwidth:
 if __name__ == '__main__':
 
     a = Bandwidth(1, 3, 5)
-    print(a.generate_main_bandwidth(100, 10))
-    # print(a.graph)
+    # print(a.generate_main_bandwidth(10, 100))
+    a.set_main_bandwidth(a.generate_main_bandwidth(10, 100))
+    a.convert_direct_to_no()
+    a.find_all_bandwidth_path()
+    a.set_device_self_bandwidth_None()
+    print(a.graph)
     # a.set_main_bandwidth(
     #     [(0, 1, 100), (0, 2, 100), (0, 3, 100), (1, 4, 10), (1, 5, 10), (2, 6, 10), (2, 7, 10), (3, 8, 10)])
     # print(a.graph)
