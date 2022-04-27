@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
     change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
                        'user_comput']
-    change_var = change_var_list[6]
+    change_var = change_var_list[7]
     if change_var == 'user':
         # 改变终端用户的数量
         # 读取数据
@@ -84,8 +84,8 @@ if __name__ == '__main__':
         plt.title('spend time versus F-APs\' number')
         plt.show()
     else:
-        begin = 0.5
-        end = 2
+        begin = 1
+        end = 3
         N_cloud = 1
         N_FAP = 10
         N_user = 25
