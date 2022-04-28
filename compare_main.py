@@ -220,5 +220,5 @@ if __name__ == '__main__':
 
     change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
                        'user_comput']
-    for i in range(2, 7):
-        generate_data(change_var_list[6], 0.5, 5)
+    for i in range(3, 8):
+        generate_data(change_var_list[i], 0.5, 5)
