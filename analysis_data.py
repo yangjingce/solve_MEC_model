@@ -162,4 +162,4 @@ if __name__ == '__main__':
 
     change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
                        'user_comput']
-    analysis_data(change_var_list[1], 0.5, 5)
+    analysis_data(change_var_list[6], 0.5, 5)
