@@ -162,7 +162,7 @@ def generate_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_u
             # 遍历模型和倍数求解
             for j, model in enumerate(model_list):
                 for q, multiple in enumerate(multiple_list):
-
+                    print('----------',vvv,'---------',j,'----------',q,'----------')
                     if v == 0:
                         device = Device(model.N_cloud, model.N_FAP,
                                         model.N_user, model, cloud_cache,
@@ -182,8 +182,8 @@ def generate_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_u
                     device.set_all()
                     model.device_cache = device.device_cache  # 设备的缓存能力
                     model.device_comput = device.device_comput  # 设备的计算能力
-                    compare_g_ans[j, q + 1], compare_g_time[j, q + 1], compare_q_ans[j, q + 1], compare_q_time[
-                        j, q + 1], same_ans_count = both_solve(model)
+                    compare_g_ans[j + 1, q], compare_g_time[j + 1, q], compare_q_ans[j + 1, q], compare_q_time[
+                        j + 1, q], same_ans_count = both_solve(model)
 
             # 保存文件
             pre_road = vvv + '/' + str(N_cloud) + '_' + str(N_FAP) + '_' + str(N_user) + vvv + str(
@@ -217,7 +217,7 @@ def generate_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_u
                 decision.set_cache_position(np.zeros([model.N_device, model.N_task]))
                 decision.set_comput_position(np.zeros([model.N_device, model.N_task]))
                 decision.set_device_time()
-                ans[j, q + 1] = np.max(decision.every_device_time)
+                ans[j + 1, q] = np.max(decision.every_device_time)
         # 保存
         pd.DataFrame(ans).to_csv('all_cloud.csv', header=False, index=False)
 
@@ -325,5 +325,6 @@ if __name__ == '__main__':
 
     change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
                        'user_comput']
-    for i in range(3, 7):
-        generate_data('multi', 0.5, 5, N_test=5)
+    # for i in range(3, 7):
+    #     generate_data(change_var_list[i], 0.5, 5, N_test=5)
+    generate_data('multi', 0.5, 5, N_test=5)
