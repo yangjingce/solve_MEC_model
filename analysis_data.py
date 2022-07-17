@@ -8,6 +8,8 @@ def analysis_all(change_begin, change_end, N_cloud=1, N_FAP=10, N_user=25):
     # change_var = ['user_cache', 'cloud_comput', 'fap_comput']
     change_var = ['fap_cache', 'user_cache', 'cloud_comput', 'fap_comput']
     plt.figure()
+    plt.rcParams['pdf.fonttype'] = 42
+    plt.rcParams['ps.fonttype'] = 42
     bax = brokenaxes(ylims=((0.0625, 0.07), (0.19, 0.207)), hspace=0.1, despine=False, diag_color='r')
     for var in change_var:
         # 读取数据
@@ -31,21 +33,34 @@ def analysis_all(change_begin, change_end, N_cloud=1, N_FAP=10, N_user=25):
         average_q_ans = np.mean(q_ans, axis=0)
         average_q_time = np.mean(q_time, axis=0)
         m = None
-
+        color = None
+        linestyle = None
+        var_label = ''
         if var == 'fap_comput':
-            m = 'o'
+            m = 'X'
+            color = 'm'
+            linestyle = '-'
+            var_label = 'F-APs\' computation capability'
         elif var == 'cloud_comput':
             m = '^'
-
+            color = 'y'
+            linestyle = ':'
+            var_label = 'Cloud\'s computation capability'
         elif var == 'user_cache':
             m = '*'
+            color = 'k'
+            linestyle = '--'
+            var_label = 'End users\' cache capacity'
         elif var == 'fap_cache':
             m = 'd'
-        bax.plot(user_range, average_q_ans, marker=m, color='#1f77b4', label='genetic algorithm,' + var)
-
-        bax.plot(user_range, average_g_ans, marker=m, color='#ff7f0e', label='game-based algorithm,' + var)
+            color = 'c'
+            linestyle = '-.'
+            var_label = 'F-APs\' cache capacity'
+        # bax.plot(user_range, average_q_ans, marker=m, color='#1f77b4', label='genetic algorithm,' + var)
+        # bax.plot(user_range, average_g_ans, marker=m, color='#ff7f0e', label='game-based algorithm,' + var)
+        bax.plot(user_range, average_q_ans, label=var_label, marker=m, color=color, linestyle=linestyle)
     bax.legend(loc=0)
-    bax.set_xlabel('Multiples of node capability', labelpad=30, fontsize=15)
+    bax.set_xlabel('Normalized Nodes\' performance', labelpad=20, fontsize=15)
     bax.set_ylabel('Delay(s)', labelpad=40, fontsize=15)
     plt.show()
 
@@ -66,13 +81,18 @@ def compare_no_offloading(change_begin, change_end, N_cloud=1, N_FAP=10, N_user=
     average_g_ans = np.mean(g_ans, axis=0)
     average_q_ans = np.mean(q_ans, axis=0)
     plt.figure()
-    plt.plot(user_range, cloud_average, label='no offload')
-    plt.plot(user_range, average_g_ans, label='game-based approach')
-    plt.plot(user_range, average_q_ans, label='genetic algorithm based approach')
-    plt.xlabel('Cloud\'s computation capability (TFLOPs)')
-    plt.ylabel('Delay(s)')
+    plt.rcParams['pdf.fonttype'] = 42
+    plt.rcParams['ps.fonttype'] = 42
+    plt.plot(user_range, cloud_average, color='r', marker='d', linestyle='-', label='no offload algorithm')
+    plt.plot(user_range, average_g_ans,  color='g', marker='*', linestyle=':', label='game-based algorithm')
+    plt.plot(user_range, average_q_ans, color='b', marker='x', linestyle='--',  label='modified genetic algorithm')
+    plt.xlabel('Cloud\'s computation capability (TFLOPs)', fontsize=15)
+    plt.ylabel('Delay(s)', fontsize=15)
     plt.legend()
     plt.show()
+    print(average_q_ans[0] / cloud_average[0],average_g_ans[0] / cloud_average[0])
+    print(average_q_ans[-1] / cloud_average[-1], average_g_ans[-1] / cloud_average[-1])
+    print((1 - np.sum(average_q_ans)/ np.sum(cloud_average)) * 100, (1 - np.sum(average_g_ans)/np.sum(cloud_average)) * 100)
 
 
 def analysis_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_user=25, N_test=1):
@@ -98,23 +118,27 @@ def analysis_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_u
         var_delay = np.var(g_ans, axis=0, ddof=1)
         # 绘图
         plt.figure()
+        plt.rcParams['pdf.fonttype'] = 42
+        plt.rcParams['ps.fonttype'] = 42
         # plt.plot(user_range, average_g_ans, color='r', marker='o', linestyle='dashed', label='g_ans')
-        plt.plot(user_range, average_g_ans, marker='o', label='g_ans')
-        plt.plot(user_range, var_delay, marker='*', label='var')
+        plt.plot(user_range, average_g_ans, marker='x', linestyle='--', label='g_ans')
+        plt.plot(user_range, var_delay, marker='*', linestyle=':', label='var')
         plt.legend(loc='upper left')
         plt.xlabel('end users\' Number')
         plt.ylabel('delay(s)')
         plt.title('delay versus end users\' number')
         plt.show()
         plt.figure()
-        plt.plot(user_range, average_q_time, marker='s', label='genetic algorithm based approach')
-        plt.plot(user_range, average_g_time / 8, marker='^', label='game-based approach')
+        plt.plot(user_range, average_q_time, color='b', marker='x', linestyle='--', label='modified genetic algorithm')
+        plt.plot(user_range, average_g_time / 8, color='g', marker='*', linestyle=':', label='game-based algorithm')
 
         plt.legend(loc='upper left')
-        plt.xlabel('The number of end users')
-        plt.ylabel('Run time (s)')
+        plt.xlabel('The number of end users', fontsize=15)
+        plt.ylabel('Run time (s)', fontsize=15)
         # plt.title('spend time versus end users\' number')
         plt.show()
+        print(average_g_time[0] / 8 / average_q_time[0])
+        print(average_g_time[-1] / 8 / average_q_time[-1])
     elif change_var == 'fap':
         # 改变fap的数量
         # 读取数据
@@ -236,5 +260,6 @@ if __name__ == '__main__':
     # change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
     #                    'user_comput']
     # analysis_data(change_var_list[6], 0.5, 5)
-    # analysis_all(0.5, 5)
-    compare_no_offloading(0.5,5)
+    analysis_all(0.5, 5)
+    # compare_no_offloading(0.5,5)
+    # analysis_data('user', 0.5, 5)
