@@ -378,8 +378,8 @@ def generate_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_u
 
 if __name__ == '__main__':
 
-    change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
-                       'user_comput']
+    # change_var_list = ['user', 'fap', 'cloud_cache', 'fap_cache', 'user_cache', 'cloud_comput', 'fap_comput',
+    #                    'user_comput']
     # for i in range(3, 7):
     #     generate_data(change_var_list[i], 0.5, 5, N_test=5)
     generate_data('multi', 0.5, 5, N_test=5)
