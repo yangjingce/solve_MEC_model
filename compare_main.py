@@ -147,8 +147,8 @@ def generate_data(change_var, change_begin, change_end, N_cloud=1, N_FAP=10, N_u
         cloud_cache, fap_cache, user_cache, cloud_comput, fap_comput, user_comput = 1000, 30, 5, 2000, 130, 5
         # 先生成N_test个模型
         model_list = [Model(N_cloud, N_FAP, N_user) for _ in range(N_test)]
-        var_l = ['cloud_comput']
-        # var_l = ['fap_cache', 'user_cache', 'cloud_comput', 'fap_comput']
+        # var_l = ['cloud_comput']
+        var_l = ['fap_cache', 'user_cache', 'cloud_comput', 'fap_comput']
         for v, vvv in enumerate(var_l):
             compare_g_ans = np.zeros([N_test + 1, len(multiple_list)])
             compare_g_time = np.zeros([N_test + 1, len(multiple_list)])
